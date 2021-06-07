@@ -1,9 +1,9 @@
 {
-  "name": "telegraf-template",
+  "name": "paid_subscription_bot",
   "version": "1.0.0",
-  "description": "Telegram bot template based on telegraf.js.org",
+  "description": "Subscription bot for Telegram channels and groups ",
   "main": "dist/app.js",
-  "repository": "https://github.com/backmeupplz/telegraf-template",
+  "repository": "https://github.com/Borodutch/paid_subscription_bot",
   "author": "backmeupplz <backmeupplz@gmail.com>",
   "license": "MIT",
   "private": false,
