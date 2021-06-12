@@ -12,7 +12,7 @@ import { handleStart } from '@/handlers/handleStart'
 import { i18n, attachI18N } from '@/helpers/i18n'
 import { setLanguage, sendLanguage } from '@/handlers/language'
 import { attachChat } from '@/middlewares/attachChat'
-import { handleBotEntry } from './handlers/handleBotEntry'
+import { handleMyChatMember } from './handlers/handleMyChatMember'
 
 // Middlewares
 bot.use(ignoreOldMessageUpdates)
@@ -25,7 +25,7 @@ bot.command('language', sendLanguage())
 // Actions
 bot.action(/l~.+/, setLanguage)
 // Handlers
-bot.on('my_chat_member', handleBotEntry)
+bot.on('my_chat_member', handleMyChatMember)
 // Errors
 bot.catch(console.error)
 // Start bot

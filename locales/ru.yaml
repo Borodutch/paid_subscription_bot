@@ -37,4 +37,6 @@ help: |
   <b>Поддержка</b>
   Если у вас остались какие-либо вопросы, пишите напрямую создателю бота в личку — @borodutch. Спасибо!
 language: Пожалуйста, выберите язык.
-language_selected: <b>Бот</b> теперь говорит по-русски.
+language_selected: <b>PSB</b> теперь говорит по-русски.
+not_admin: Пожалуйста, сделайте @paid_subscription_bot админом, иначе он не сможет работать.
+start_group: Подтвердите владение этим сообществом, перейдя <a href="https://t.me/paid_subscription_bot?start=admin${chatId}">по этой ссылке</a> и нажав "Start".

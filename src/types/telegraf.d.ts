@@ -6,5 +6,6 @@ declare module 'telegraf' {
   export class Context {
     dbchat: DocumentType<Chat>
     i18n: I18N
+    startPayload?: string
   }
 }
