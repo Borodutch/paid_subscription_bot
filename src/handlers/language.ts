@@ -1,22 +1,26 @@
+import { sendHelp } from '@/handlers/sendHelp'
 import { Context, Markup as m } from 'telegraf'
 import { readdirSync, readFileSync } from 'fs'
 import { safeLoad } from 'js-yaml'
 
 export const localeActions = localesFiles().map((file) => file.split('.')[0])
 
-export function sendLanguage(ctx: Context) {
-  return ctx.reply(ctx.i18n.t('language'), languageKeyboard())
+export function sendLanguage(needsStartAfterwards = false) {
+  return (ctx: Context) =>
+    ctx.reply(ctx.i18n.t('language'), languageKeyboard(needsStartAfterwards))
 }
 
 export async function setLanguage(ctx: Context) {
-  let user = ctx.dbuser
+  let chat = ctx.dbchat
   if ('data' in ctx.callbackQuery) {
-    user.language = ctx.callbackQuery.data
-    user = await (user as any).save()
+    const localeComponents = ctx.callbackQuery.data.split('~')
+    const localeCode = localeComponents[1]
+    const needsStartAfterwards = localeComponents[2] === 'true'
+    chat.language = localeCode
+    chat = await chat.save()
     const message = ctx.callbackQuery.message
 
-    const anyI18N = ctx.i18n as any
-    anyI18N.locale(ctx.callbackQuery.data)
+    ctx.i18n.locale(localeCode)
 
     await ctx.telegram.editMessageText(
       message.chat.id,
@@ -25,10 +29,13 @@ export async function setLanguage(ctx: Context) {
       ctx.i18n.t('language_selected'),
       { parse_mode: 'HTML' }
     )
+    if (needsStartAfterwards) {
+      await sendHelp(ctx)
+    }
   }
 }
 
-function languageKeyboard() {
+function languageKeyboard(needsStartAfterwards: boolean) {
   const locales = localesFiles()
   const result = []
   locales.forEach((locale, index) => {
@@ -36,19 +43,11 @@ function languageKeyboard() {
     const localeName = safeLoad(
       readFileSync(`${__dirname}/../../locales/${locale}`, 'utf8')
     ).name
+    const localeData = `l~${localeCode}~${needsStartAfterwards}`
     if (index % 2 == 0) {
-      if (index === 0) {
-        result.push([m.button.callback(localeName, localeCode)])
-      } else {
-        result[result.length - 1].push(
-          m.button.callback(localeName, localeCode)
-        )
-      }
+      result.push([m.button.callback(localeName, localeData)])
     } else {
-      result[result.length - 1].push(m.button.callback(localeName, localeCode))
-      if (index < locales.length - 1) {
-        result.push([])
-      }
+      result[result.length - 1].push(m.button.callback(localeName, localeData))
     }
   })
   return m.inlineKeyboard(result)

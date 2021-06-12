@@ -12,6 +12,6 @@ export const i18n = new dirtyI18N({
 
 export function attachI18N(ctx: Context, next: () => void) {
   const anyI18N = ctx.i18n as any
-  anyI18N.locale(ctx.dbuser.language)
+  anyI18N.locale(ctx.dbchat.language || 'en')
   return next()
 }

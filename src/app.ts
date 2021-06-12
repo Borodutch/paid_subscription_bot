@@ -10,17 +10,20 @@ import { ignoreOldMessageUpdates } from '@/middlewares/ignoreOldMessageUpdates'
 import { sendHelp } from '@/handlers/sendHelp'
 import { i18n, attachI18N } from '@/helpers/i18n'
 import { setLanguage, sendLanguage } from '@/handlers/language'
-import { attachUser } from '@/middlewares/attachUser'
+import { attachChat } from '@/middlewares/attachChat'
+import { handleBotEntry } from './handlers/handleBotEntry'
 
 // Middlewares
 bot.use(ignoreOldMessageUpdates)
-bot.use(attachUser)
+bot.use(attachChat)
 bot.use(i18n.middleware(), attachI18N)
 // Commands
 bot.command(['help', 'start'], sendHelp)
-bot.command('language', sendLanguage)
+bot.command('language', sendLanguage())
 // Actions
-bot.action(localeActions, setLanguage)
+bot.action(/l~.+/, setLanguage)
+// Handlers
+bot.on('my_chat_member', handleBotEntry)
 // Errors
 bot.catch(console.error)
 // Start bot
