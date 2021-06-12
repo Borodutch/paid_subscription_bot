@@ -8,6 +8,7 @@ dotenv.config({ path: `${__dirname}/../.env` })
 import { bot } from '@/helpers/bot'
 import { ignoreOldMessageUpdates } from '@/middlewares/ignoreOldMessageUpdates'
 import { sendHelp } from '@/handlers/sendHelp'
+import { handleStart } from '@/handlers/handleStart'
 import { i18n, attachI18N } from '@/helpers/i18n'
 import { setLanguage, sendLanguage } from '@/handlers/language'
 import { attachChat } from '@/middlewares/attachChat'
@@ -18,7 +19,8 @@ bot.use(ignoreOldMessageUpdates)
 bot.use(attachChat)
 bot.use(i18n.middleware(), attachI18N)
 // Commands
-bot.command(['help', 'start'], sendHelp)
+bot.help(sendHelp)
+bot.start(handleStart)
 bot.command('language', sendLanguage())
 // Actions
 bot.action(/l~.+/, setLanguage)
