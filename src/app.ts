@@ -13,6 +13,7 @@ import { i18n, attachI18N } from '@/helpers/i18n'
 import { setLanguage, sendLanguage } from '@/handlers/language'
 import { attachChat } from '@/middlewares/attachChat'
 import { handleMyChatMember } from './handlers/handleMyChatMember'
+import { toggleNotifications } from './handlers/toggleNotifications'
 
 // Middlewares
 bot.use(ignoreOldMessageUpdates)
@@ -22,6 +23,7 @@ bot.use(i18n.middleware(), attachI18N)
 bot.help(sendHelp)
 bot.start(handleStart)
 bot.command('language', sendLanguage())
+bot.command('notifications', toggleNotifications)
 // Actions
 bot.action(/l~.+/, setLanguage)
 // Handlers
