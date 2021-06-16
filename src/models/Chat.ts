@@ -5,6 +5,8 @@ export class Chat {
   id: number
   @prop()
   language?: string
+  @prop()
+  notificationsOn: boolean
 }
 
 // Get Chat model
