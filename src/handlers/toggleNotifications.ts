@@ -1,6 +1,10 @@
 import { Context } from 'telegraf'
 
-export function toggleNotifications(ctx: Context) {
+export async function toggleNotifications(ctx: Context) {
   ctx.dbchat.notificationsOn = !ctx.dbchat.notificationsOn
-  return ctx.dbchat.save()
+  await ctx.dbchat.save()
+  const replyType = ctx.dbchat.notificationsOn
+    ? 'notifications_on'
+    : 'notifications_off'
+  return ctx.reply(ctx.i18n.t(replyType))
 }
