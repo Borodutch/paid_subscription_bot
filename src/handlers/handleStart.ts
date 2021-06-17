@@ -10,7 +10,7 @@ export function sendStart(ctx: Context) {
   return ctx.replyWithHTML(
     ctx.i18n.t('start_group', {
       chatId: ctx.chat.id,
-      botName: process.env.BOTNAME,
+      botName: ctx.botInfo.username,
     }),
     {
       disable_web_page_preview: true,
