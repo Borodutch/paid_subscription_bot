@@ -1,12 +1,12 @@
-import { sendStart } from '@/handlers/handleStart'
 import { Context, Markup as m } from 'telegraf'
 import { readdirSync, readFileSync } from 'fs'
 import { safeLoad } from 'js-yaml'
 import { sendNotAdmin } from './sendNotAdmin'
+import { sendStartGroup } from './handleMyChatMember'
 
 export const localeActions = localesFiles().map((file) => file.split('.')[0])
 
-type MessageAfterLanguage = 'none' | 'start' | 'notAdmin'
+type MessageAfterLanguage = 'none' | 'start_group' | 'notAdmin'
 
 export function sendLanguage(
   messageAfterLanguage: MessageAfterLanguage = 'none'
@@ -35,8 +35,8 @@ export async function setLanguage(ctx: Context) {
       { parse_mode: 'HTML' }
     )
     switch (messageAfterLanguage) {
-      case 'start':
-        await sendStart(ctx)
+      case 'start_group':
+        await sendStartGroup(ctx)
         break
       case 'notAdmin':
         await sendNotAdmin(ctx)

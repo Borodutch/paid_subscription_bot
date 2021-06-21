@@ -40,5 +40,7 @@ language: Пожалуйста, выберите язык.
 language_selected: <b>PSB</b> теперь говорит по-русски.
 not_admin: Пожалуйста, сделайте @${botName} админом, иначе он не сможет работать.
 start_group: Подтвердите владение этим сообществом, перейдя <a href="https://t.me/${botName}?start=admin${chatId}">по этой ссылке</a> и нажав "Start".
+start_group_admin: Администратор группы подтвержден!
+start_group_not_admin: Простите, эта ссылка существует только для администраторов сообществ.
 notifications_on: Уведомления включены
 notifications_off: Уведомления отключены

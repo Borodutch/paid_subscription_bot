@@ -7,9 +7,9 @@ export function handleMyChatMember(ctx: Context) {
   // The bot is admin now, send start
   if (ctx.myChatMember.new_chat_member.status === 'administrator') {
     if (!ctx.dbchat.language) {
-      return sendLanguage('start')(ctx)
+      return sendLanguage('start_group')(ctx)
     }
-    return sendStart(ctx)
+    return sendStartGroup(ctx)
   }
   // Check if it's an entry
   if (
@@ -21,4 +21,16 @@ export function handleMyChatMember(ctx: Context) {
     }
     return sendNotAdmin(ctx)
   }
+}
+
+export function sendStartGroup(ctx: Context) {
+  return ctx.replyWithHTML(
+    ctx.i18n.t('start_group', {
+      chatId: ctx.chat.id,
+      botName: ctx.botInfo.username,
+    }),
+    {
+      disable_web_page_preview: true,
+    }
+  )
 }
