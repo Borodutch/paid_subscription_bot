@@ -1,5 +1,4 @@
 import { Context } from 'telegraf'
-import { telegram } from '../helpers/telegram'
 
 export function handleStart(ctx: Context) {
   return sendStart(ctx)
@@ -12,7 +11,7 @@ export async function sendStart(ctx: Context) {
   if (!!startPayload && startPayload.startsWith('admin')) {
     const chatId = +startPayload.replace('admin', '')
     const userId = +ctx.message.from.id
-    const chatMemberInfo = await telegram.getChatMember(chatId, userId)
+    const chatMemberInfo = await ctx.telegram.getChatMember(chatId, userId)
 
     console.log(chatId)
     console.log(userId)
