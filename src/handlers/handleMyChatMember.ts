@@ -1,10 +1,9 @@
-import { sendStart } from '@/handlers/handleStart'
 import { sendLanguage } from '@/handlers/language'
 import { Context } from 'telegraf'
 import { sendNotAdmin } from '@/handlers/sendNotAdmin'
-import { MessageAfterLanguage } from '@/handlers/language';
+import { MessageAfterLanguage } from '@/handlers/language'
 
-export function handleMyChatMember(ctx: Context) {  
+export function handleMyChatMember(ctx: Context) {
   // The bot is admin now, send start
   if (ctx.myChatMember.new_chat_member.status === 'administrator') {
     if (!ctx.dbchat.language) {
@@ -19,7 +18,7 @@ export function handleMyChatMember(ctx: Context) {
   ) {
     if (!ctx.dbchat.language) {
       return sendLanguage(MessageAfterLanguage.notAdmin)(ctx)
-    }    
+    }
     return sendNotAdmin(ctx)
   }
 }

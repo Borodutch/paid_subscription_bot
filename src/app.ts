@@ -14,7 +14,7 @@ import { setLanguage, sendLanguage } from '@/handlers/language'
 import { attachChat } from '@/middlewares/attachChat'
 import { handleMyChatMember } from '@/handlers/handleMyChatMember'
 import { toggleNotifications } from '@/handlers/toggleNotifications'
-import { stopIfPrivate } from '@/middlewares/checkIfPrivateChat';
+import { stopIfPrivate } from '@/middlewares/stopIfPrivate'
 
 // Middlewares
 bot.use(ignoreOldMessageUpdates)

@@ -3,7 +3,7 @@ import { readdirSync, readFileSync } from 'fs'
 import { safeLoad } from 'js-yaml'
 import { sendNotAdmin } from '@/handlers/sendNotAdmin'
 import { sendStartGroup } from '@/handlers/handleMyChatMember'
-import { sendStart } from '@/handlers/handleStart';
+import { sendStart } from '@/handlers/handleStart'
 
 export const localeActions = localesFiles().map((file) => file.split('.')[0])
 
@@ -16,10 +16,14 @@ export enum MessageAfterLanguage {
 }
 
 export function sendLanguage(
-  messageAfterLanguage: MessageAfterLanguage = MessageAfterLanguage.none, startPayload?: string
+  messageAfterLanguage: MessageAfterLanguage = MessageAfterLanguage.none,
+  startPayload?: string
 ) {
   return (ctx: Context) =>
-    ctx.reply(ctx.i18n.t('language'), languageKeyboard(messageAfterLanguage, startPayload))
+    ctx.reply(
+      ctx.i18n.t('language'),
+      languageKeyboard(messageAfterLanguage, startPayload)
+    )
 }
 
 export async function setLanguage(ctx: Context) {
@@ -29,7 +33,7 @@ export async function setLanguage(ctx: Context) {
     const localeCode = localeComponents[1]
     const messageAfterLanguage = localeComponents[2] as MessageAfterLanguage
     const startPayload = localeComponents[3]
-    
+
     chat.language = localeCode
     chat = await chat.save()
     const message = ctx.callbackQuery.message
@@ -51,7 +55,7 @@ export async function setLanguage(ctx: Context) {
       case MessageAfterLanguage.startGroup:
         await sendStartGroup(ctx)
         break
-      case MessageAfterLanguage.notAdmin:        
+      case MessageAfterLanguage.notAdmin:
         await sendNotAdmin(ctx)
         break
       default:
@@ -60,7 +64,10 @@ export async function setLanguage(ctx: Context) {
   }
 }
 
-function languageKeyboard(messageAfterLanguage: MessageAfterLanguage, startPayload?: string) {
+function languageKeyboard(
+  messageAfterLanguage: MessageAfterLanguage,
+  startPayload?: string
+) {
   const locales = localesFiles()
   const result = []
   locales.forEach((locale, index) => {
@@ -68,7 +75,9 @@ function languageKeyboard(messageAfterLanguage: MessageAfterLanguage, startPaylo
     const localeName = safeLoad(
       readFileSync(`${__dirname}/../../locales/${locale}`, 'utf8')
     ).name
-    const localeData = `l~${localeCode}~${messageAfterLanguage}~${startPayload || ''}`
+    const localeData = `l~${localeCode}~${messageAfterLanguage}~${
+      startPayload || ''
+    }`
     if (index % 2 == 0) {
       result.push([m.button.callback(localeName, localeData)])
     } else {

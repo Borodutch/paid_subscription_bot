@@ -1,5 +1,5 @@
 import { Context } from 'telegraf'
-import { MessageAfterLanguage, sendLanguage } from '@/handlers/language';
+import { MessageAfterLanguage, sendLanguage } from '@/handlers/language'
 
 export function handleStart(ctx: Context) {
   return sendStart(ctx)
@@ -7,7 +7,7 @@ export function handleStart(ctx: Context) {
 
 export async function sendStart(ctx: Context) {
   const startPayload = ctx.startPayload
-  
+
   // if no language detected, ask for language first
   if (!ctx.dbchat.language) {
     return sendLanguage(MessageAfterLanguage.start, startPayload)(ctx)
