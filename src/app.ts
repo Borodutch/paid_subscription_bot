@@ -12,8 +12,9 @@ import { handleStart } from '@/handlers/handleStart'
 import { i18n, attachI18N } from '@/helpers/i18n'
 import { setLanguage, sendLanguage } from '@/handlers/language'
 import { attachChat } from '@/middlewares/attachChat'
-import { handleMyChatMember } from './handlers/handleMyChatMember'
-import { toggleNotifications } from './handlers/toggleNotifications'
+import { handleMyChatMember } from '@/handlers/handleMyChatMember'
+import { toggleNotifications } from '@/handlers/toggleNotifications'
+import { stopIfPrivate } from '@/middlewares/checkIfPrivateChat';
 
 // Middlewares
 bot.use(ignoreOldMessageUpdates)
@@ -27,7 +28,7 @@ bot.command('notifications', toggleNotifications)
 // Actions
 bot.action(/l~.+/, setLanguage)
 // Handlers
-bot.on('my_chat_member', handleMyChatMember)
+bot.on('my_chat_member', stopIfPrivate, handleMyChatMember)
 // Errors
 bot.catch(console.error)
 // Start bot
