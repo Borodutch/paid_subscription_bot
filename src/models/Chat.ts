@@ -15,6 +15,8 @@ export class Chat {
   notificationsOn: boolean
   @prop()
   price?: Price
+  @prop()
+  administratorIds?: number[]
 }
 
 // Get Chat model
