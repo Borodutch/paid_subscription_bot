@@ -7,5 +7,6 @@ declare module 'telegraf' {
     dbchat: DocumentType<Chat>
     i18n: I18N
     startPayload?: string
+    userChats?: DocumentType<Chat>[]
   }
 }

@@ -7,10 +7,12 @@ export class Chat {
   language?: string
   @prop()
   notificationsOn: boolean
+  @prop()
+  administratorIds?: number[]
 }
 
 // Get Chat model
-const ChatModel = getModelForClass(Chat, {
+export const ChatModel = getModelForClass(Chat, {
   schemaOptions: { timestamps: true },
 })
 

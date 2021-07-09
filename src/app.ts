@@ -15,6 +15,8 @@ import { attachChat } from '@/middlewares/attachChat'
 import { handleMyChatMember } from '@/handlers/handleMyChatMember'
 import { toggleNotifications } from '@/handlers/toggleNotifications'
 import { stopIfPrivate } from '@/middlewares/stopIfPrivate'
+import { handleConfigureSubscriptions } from '@/handlers/handleConfigureSubscriptions'
+import { stopIfPublic } from './middlewares/stopIfPublic'
 
 // Middlewares
 bot.use(ignoreOldMessageUpdates)
@@ -25,6 +27,11 @@ bot.help(sendHelp)
 bot.start(handleStart)
 bot.command('language', sendLanguage())
 bot.command('notifications', toggleNotifications)
+bot.command(
+  'configureSubscriptions',
+  stopIfPublic,
+  handleConfigureSubscriptions
+)
 // Actions
 bot.action(/l~.+/, setLanguage)
 // Handlers
