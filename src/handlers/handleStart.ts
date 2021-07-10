@@ -1,5 +1,6 @@
 import { Context } from 'telegraf'
 import { MessageAfterLanguage, sendLanguage } from '@/handlers/language'
+import { getOrCreateSubscription } from '@/models/Subscription'
 
 export function handleStart(ctx: Context) {
   return sendStart(ctx)
@@ -26,5 +27,5 @@ export async function sendStart(ctx: Context) {
     }
   }
 
-  return ctx.replyWithHTML(ctx.i18n.t('help'))
+  return getOrCreateSubscription(ctx)
 }

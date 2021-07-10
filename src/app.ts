@@ -15,6 +15,7 @@ import { attachChat } from '@/middlewares/attachChat'
 import { handleMyChatMember } from '@/handlers/handleMyChatMember'
 import { toggleNotifications } from '@/handlers/toggleNotifications'
 import { stopIfPrivate } from '@/middlewares/stopIfPrivate'
+import { runMongo } from '@/models/index'
 
 // Middlewares
 bot.use(ignoreOldMessageUpdates)
@@ -32,6 +33,9 @@ bot.on('my_chat_member', stopIfPrivate, handleMyChatMember)
 // Errors
 bot.catch(console.error)
 // Start bot
+runMongo().then(() => {
+  console.log('Mongo connected')
+})
 bot.launch().then(() => {
   console.info(`Bot ${bot.botInfo.username} is up and running`)
 })

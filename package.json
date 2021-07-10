@@ -23,6 +23,7 @@
   "dependencies": {
     "@typegoose/typegoose": "^7.6.1",
     "dotenv": "^10.0.0",
+    "ethereumjs-wallet": "^1.0.1",
     "module-alias": "^2.2.2",
     "mongoose": "5.10.18",
     "telegraf": "^4.3.0",

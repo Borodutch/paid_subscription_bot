@@ -1,9 +1,12 @@
 import * as mongoose from 'mongoose'
 
-mongoose.connect(process.env.MONGO, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-mongoose.set('useCreateIndex', true)
+export function runMongo(mongoUrl = process.env.MONGO) {
+  return mongoose.connect(mongoUrl, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: true,
+  })
+}
 
 export * from './Chat'
