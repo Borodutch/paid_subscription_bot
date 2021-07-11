@@ -17,6 +17,16 @@ export class Chat {
   price?: Price
   @prop()
   administratorIds?: number[]
+  @prop()
+  configuredChat?: number
+  @prop()
+  ethWallet?: string
+  @prop()
+  walletConfMessageId?: number
+  @prop()
+  payment?: number
+  @prop()
+  paymentConfMessageId?: number
 }
 
 // Get Chat model
