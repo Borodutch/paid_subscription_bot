@@ -15,8 +15,17 @@ import { attachChat } from '@/middlewares/attachChat'
 import { handleMyChatMember } from '@/handlers/handleMyChatMember'
 import { toggleNotifications } from '@/handlers/toggleNotifications'
 import { stopIfPrivate } from '@/middlewares/stopIfPrivate'
-import { handleConfigureSubscriptions } from '@/handlers/handleConfigureSubscriptions'
-import { stopIfPublic } from './middlewares/stopIfPublic'
+import {
+  handleConfigureSubscriptions,
+  sendConfigureSingleSubscription,
+} from '@/handlers/handleConfigureSubscriptions'
+import { stopIfPublic } from '@/middlewares/stopIfPublic'
+import { extractConfChat } from '@/middlewares/extractConfChat'
+import {
+  handleConfMessage,
+  handleConfWallet,
+  handleConfPay,
+} from '@/handlers/handleConfigureSubscriptions'
 
 // Middlewares
 bot.use(ignoreOldMessageUpdates)
@@ -34,8 +43,12 @@ bot.command(
 )
 // Actions
 bot.action(/l~.+/, setLanguage)
+bot.action(/conf~.+/, extractConfChat, sendConfigureSingleSubscription)
+bot.action(/wallet~.+/, handleConfWallet)
+bot.action(/pay~.+/, handleConfPay)
 // Handlers
 bot.on('my_chat_member', stopIfPrivate, handleMyChatMember)
+bot.on('message', handleConfMessage)
 // Errors
 bot.catch(console.error)
 // Start bot

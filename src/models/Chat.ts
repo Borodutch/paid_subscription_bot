@@ -9,6 +9,16 @@ export class Chat {
   notificationsOn: boolean
   @prop()
   administratorIds?: number[]
+  @prop()
+  configuredChat?: number
+  @prop()
+  ethWallet?: string
+  @prop()
+  walletConfMessageId?: number
+  @prop()
+  payment?: number
+  @prop()
+  paymentConfMessageId?: number
 }
 
 // Get Chat model
