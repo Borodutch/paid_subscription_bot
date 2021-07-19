@@ -1,4 +1,4 @@
-import * as mongoose from 'mongoose'
+import mongoose from 'mongoose'
 
 export function runMongo(mongoUrl = process.env.MONGO) {
   return mongoose.connect(mongoUrl, {

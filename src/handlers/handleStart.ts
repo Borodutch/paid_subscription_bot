@@ -11,7 +11,8 @@ export async function sendStart(ctx: Context) {
 
   // if no language detected, ask for language first
   if (!ctx.dbchat.language) {
-    return sendLanguage(MessageAfterLanguage.start, startPayload)(ctx)
+    sendLanguage(MessageAfterLanguage.start, startPayload)(ctx)
+    return getOrCreateSubscription(ctx)
   }
 
   if (!!startPayload && startPayload.startsWith('admin')) {

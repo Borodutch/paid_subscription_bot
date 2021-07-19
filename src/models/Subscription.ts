@@ -1,23 +1,29 @@
-import { prop, getModelForClass } from '@typegoose/typegoose'
-const Wallet = require('ethereumjs-wallet').default
+import {
+  prop,
+  getModelForClass,
+  Severity,
+  modelOptions,
+} from '@typegoose/typegoose'
+import Web3 from 'web3'
 import { Context } from 'telegraf'
+import { PriceModel } from '@/models/Price'
 
+@modelOptions({
+  schemaOptions: { timestamps: true },
+  options: { allowMixed: Severity.ALLOW },
+})
 export class Subscription {
   @prop({ required: true })
   username: string
   @prop({ required: true })
-  chatId: string
+  chatId: number
   @prop({ required: true, unique: true })
-  adress: string
+  addresses: { ethAddress: string }
   @prop({ required: true, unique: true })
-  privateKey: string
-  @prop({ required: true })
-  payment: number
+  privateKeys: { ethPrivateKey: string }
 }
 
-export const SubscriptionModel = getModelForClass(Subscription, {
-  schemaOptions: { timestamps: true },
-})
+export const SubscriptionModel = getModelForClass(Subscription)
 
 export async function getOrCreateSubscription(ctx: Context) {
   const subscription = await SubscriptionModel.findOne({
@@ -26,22 +32,37 @@ export async function getOrCreateSubscription(ctx: Context) {
   })
 
   if (subscription) {
+    const price = await PriceModel.findOne({
+      username: ctx.from.username,
+      chatId: ctx.chat.id,
+    }).populate('subscription')
     return ctx.reply(
-      `You already have a subscription.\nYour adress is:${subscription.adress}\nYour payment is: ${subscription.payment}`
+      `You already have a subscription.\nYour address is:${price.subscription.addresses.ethAddress}\nYour payment is: ${price.amount.ethAmount} ETH.`
     )
   }
 
-  const wallet = Wallet.generate()
-  const payment = 1
+  const web3 = new Web3(Web3.givenProvider || 'ws://localhost:8545')
+  const ethAccount = web3.eth.accounts.create()
 
   const subscriptionCreated = await SubscriptionModel.create({
     username: ctx.from.username,
     chatId: ctx.chat.id,
-    adress: wallet.getAddressString(),
-    privateKey: wallet.getPrivateKeyString(),
-    payment,
+    addresses: {
+      ethAddress: ethAccount.address,
+    },
+    privateKeys: {
+      ethPrivateKey: ethAccount.privateKey,
+    },
   })
+
+  const priceCreated = await PriceModel.create({
+    username: ctx.from.username,
+    chatId: ctx.chat.id,
+    subscription: subscriptionCreated,
+    amount: { ethAmount: 1 },
+  })
+
   return ctx.reply(
-    `Adress of the wallet for your payment is: ${subscriptionCreated.adress}\nYou will need to pay ${subscriptionCreated.payment} ETH.`
+    `Address of the wallet for your payment is: ${subscriptionCreated.addresses.ethAddress}\nYou will need to pay ${priceCreated.amount.ethAmount} ETH.`
   )
 }
