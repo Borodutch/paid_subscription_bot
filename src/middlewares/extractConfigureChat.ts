@@ -1,7 +1,7 @@
 import { Context } from 'telegraf'
 import { ChatModel } from '@/models/Chat'
 
-export const extractConfChat = async (ctx: Context, next: () => void) => {
+export const extractConfigureChat = async (ctx: Context, next: () => void) => {
   if (!('data' in ctx.callbackQuery)) {
     return
   }

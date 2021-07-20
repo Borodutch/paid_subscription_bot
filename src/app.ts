@@ -21,11 +21,11 @@ import {
   sendConfigureSingleSubscription,
 } from '@/handlers/handleConfigureSubscriptions'
 import { stopIfPublic } from '@/middlewares/stopIfPublic'
-import { extractConfChat } from '@/middlewares/extractConfChat'
+import { extractConfigureChat } from '@/middlewares/extractConfigureChat'
 import {
-  handleConfMessage,
-  handleConfWallet,
-  handleConfPay,
+  handleConfigureMessage,
+  handleConfigureWallet,
+  handleConfigurePay,
 } from '@/handlers/handleConfigureSubscriptions'
 
 // Middlewares
@@ -44,12 +44,12 @@ bot.command(
 )
 // Actions
 bot.action(/l~.+/, setLanguage)
-bot.action(/conf~.+/, extractConfChat, sendConfigureSingleSubscription)
-bot.action(/wallet~.+/, handleConfWallet)
-bot.action(/pay~.+/, handleConfPay)
+bot.action(/config~.+/, extractConfigureChat, sendConfigureSingleSubscription)
+bot.action(/wallet~.+/, handleConfigureWallet)
+bot.action(/pay~.+/, handleConfigurePay)
 // Handlers
 bot.on('my_chat_member', stopIfPrivate, handleMyChatMember)
-bot.on('message', handleConfMessage)
+bot.on('message', handleConfigureMessage)
 // Errors
 bot.catch(console.error)
 // Start bot
