@@ -16,13 +16,10 @@ import { handleMyChatMember } from '@/handlers/handleMyChatMember'
 import { toggleNotifications } from '@/handlers/toggleNotifications'
 import { stopIfPrivate } from '@/middlewares/stopIfPrivate'
 import { runMongo } from '@/models/index'
-import {
-  handleConfigureSubscriptions,
-  sendConfigureSingleSubscription,
-} from '@/handlers/handleConfigureSubscriptions'
 import { stopIfPublic } from '@/middlewares/stopIfPublic'
-import { extractConfigureChat } from '@/middlewares/extractConfigureChat'
 import {
+  handleConfigureSingleSubscription,
+  handleConfigureSubscriptions,
   handleConfigureMessage,
   handleConfigureWallet,
   handleConfigurePay,
@@ -44,7 +41,7 @@ bot.command(
 )
 // Actions
 bot.action(/l~.+/, setLanguage)
-bot.action(/config~.+/, extractConfigureChat, sendConfigureSingleSubscription)
+bot.action(/config~.+/, handleConfigureSingleSubscription)
 bot.action(/wallet~.+/, handleConfigureWallet)
 bot.action(/pay~.+/, handleConfigurePay)
 // Handlers
