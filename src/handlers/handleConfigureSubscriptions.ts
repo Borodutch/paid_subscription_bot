@@ -10,7 +10,7 @@ export const sendConfigureSubscriptions = async (ctx: Context) => {
 
   const keyboardData = []
   chatData.forEach((chat) => {
-    keyboardData.push([m.button.callback(chat.title, `conf~${chat.id}`)])
+    keyboardData.push([m.button.callback(chat.title, `config~${chat.id}`)])
   })
   const keyboard = m.inlineKeyboard(keyboardData)
 
@@ -40,56 +40,56 @@ export const sendConfigureSingleSubscription = (ctx: Context) => {
   )
 }
 
-export const handleConfWallet = async (ctx: Context) => {
+export const handleConfigureWallet = async (ctx: Context) => {
   if (!('data' in ctx.callbackQuery)) {
     return
   }
   const chatId = +ctx.callbackQuery.data.split('~')[1]
-  const msg = await ctx.reply(ctx.i18n.t('configure_wallet'))
+  const message = await ctx.reply(ctx.i18n.t('configure_wallet'))
 
   ctx.dbchat.configuredChat = chatId
-  ctx.dbchat.walletConfMessageId = msg.message_id
+  ctx.dbchat.walletConfigureMessageId = message.message_id
   await ctx.dbchat.save()
 }
 
-export const handleConfPay = async (ctx: Context) => {
+export const handleConfigurePay = async (ctx: Context) => {
   if (!('data' in ctx.callbackQuery)) {
     return
   }
   const chatId = +ctx.callbackQuery.data.split('~')[1]
-  const msg = await ctx.reply(ctx.i18n.t('configure_pay'))
+  const message = await ctx.reply(ctx.i18n.t('configure_pay'))
 
   ctx.dbchat.configuredChat = chatId
-  ctx.dbchat.paymentConfMessageId = msg.message_id
+  ctx.dbchat.paymentConfigureMessageId = message.message_id
   await ctx.dbchat.save()
 }
 
-export const handleConfMessage = async (ctx: Context) => {
-  const msg = ctx.message
-  const replyTo = msg.reply_to_message
+export const handleConfigureMessage = async (ctx: Context) => {
+  const message = ctx.message
+  const replyTo = message.reply_to_message
   if (!replyTo) return
 
   // configuring wallet
-  if (ctx.dbchat.walletConfMessageId === replyTo.message_id) {
+  if (ctx.dbchat.walletConfigureMessageId === replyTo.message_id) {
     const configuredChannel = await ChatModel.findOne({
       id: ctx.dbchat.configuredChat,
     })
     if (!configuredChannel) return
 
-    configuredChannel.ethWallet = msg.text
+    configuredChannel.ethWallet = message.text
     await configuredChannel.save()
 
     return ctx.reply(ctx.i18n.t('configure_wallet_success'))
   }
 
   // configuring payment
-  if (ctx.dbchat.paymentConfMessageId === replyTo.message_id) {
+  if (ctx.dbchat.paymentConfigureMessageId === replyTo.message_id) {
     const configuredChannel = await ChatModel.findOne({
       id: ctx.dbchat.configuredChat,
     })
     if (!configuredChannel) return
 
-    const amount = Math.floor(+msg.text * 100) / 100
+    const amount = Math.floor(+message.text * 100) / 100
     if (isNaN(amount)) return
 
     configuredChannel.payment = amount

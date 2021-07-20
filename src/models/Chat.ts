@@ -14,11 +14,11 @@ export class Chat {
   @prop()
   ethWallet?: string
   @prop()
-  walletConfMessageId?: number
+  walletConfigureMessageId?: number
   @prop()
   payment?: number
   @prop()
-  paymentConfMessageId?: number
+  paymentConfigureMessageId?: number
 }
 
 // Get Chat model
