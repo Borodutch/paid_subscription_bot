@@ -15,7 +15,9 @@ export const sendConfigureSubscriptions = async (
 
   const keyboardData = []
   chatData.forEach((chat) => {
-    keyboardData.push([m.button.callback(chat.title, `config~${chat.id}`)])
+    if ('title' in chat) {
+      keyboardData.push([m.button.callback(chat.title, `config~${chat.id}`)])
+    }
   })
   const keyboard = m.inlineKeyboard(keyboardData)
 
@@ -71,6 +73,9 @@ export const handleConfigurePay = async (ctx: Context) => {
 }
 
 export const handleConfigureMessage = async (ctx: Context) => {
+  if (!('reply_to_message' in ctx.message) || !('text' in ctx.message)) {
+    return
+  }
   const message = ctx.message
   const replyTo = message.reply_to_message
   if (!replyTo) return
@@ -106,6 +111,9 @@ export const handleConfigureMessage = async (ctx: Context) => {
 }
 
 export const handleConfigureSingleSubscription = async (ctx: Context) => {
+  if (!('data' in ctx.callbackQuery)) {
+    return
+  }
   const id = +ctx.callbackQuery.data.split('~')[1]
   const chat = await ChatModel.findOne({
     id,
