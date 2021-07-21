@@ -8,6 +8,18 @@ import Web3 from 'web3'
 import { Context } from 'telegraf'
 import { PriceModel } from '@/models/Price'
 
+interface Adresses {
+  ethAddress: string
+}
+
+interface PrivateKeys {
+  ethPrivateKey: string
+}
+
+interface Price {
+  monthly: { eth: number }
+}
+
 @modelOptions({
   schemaOptions: { timestamps: true },
   options: { allowMixed: Severity.ALLOW },
@@ -18,9 +30,11 @@ export class Subscription {
   @prop({ required: true })
   chatId: number
   @prop({ required: true, unique: true })
-  addresses: { ethAddress: string }
+  addresses: Adresses
   @prop({ required: true, unique: true })
-  privateKeys: { ethPrivateKey: string }
+  privateKeys: PrivateKeys
+  @prop({ required: true })
+  price: Price
 }
 
 export const SubscriptionModel = getModelForClass(Subscription)
