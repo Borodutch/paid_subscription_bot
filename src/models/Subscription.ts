@@ -5,8 +5,6 @@ import {
   modelOptions,
 } from '@typegoose/typegoose'
 import Web3 from 'web3'
-import { Context } from 'telegraf'
-import { PriceModel } from '@/models/Price'
 
 interface Adresses {
   eth: string
