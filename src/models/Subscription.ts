@@ -45,7 +45,7 @@ export async function getOrCreateSubscription(userId: number, chatId: number) {
   const price = 1
 
   if (subscription) {
-    return `To subscribe to this chat, you need to pay ${subscription.prices.monthly.eth} ETH to this adress: ${subscription.addresses.eth}.`
+    return subscription
   }
 
   const web3 = new Web3(Web3.givenProvider || 'ws://localhost:8545')
@@ -63,5 +63,5 @@ export async function getOrCreateSubscription(userId: number, chatId: number) {
     prices: { monthly: { eth: price } },
   })
 
-  return `To subscribe to this chat, you need to pay ${subscriptionCreated.prices.monthly.eth} ETH to this adress: ${subscriptionCreated.addresses.eth}.`
+  return subscription
 }
