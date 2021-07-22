@@ -2,7 +2,7 @@ import {
   prop,
   getModelForClass,
   Severity,
-  modelOptions,
+  setGlobalOptions,
 } from '@typegoose/typegoose'
 import Web3 from 'web3'
 
@@ -18,10 +18,11 @@ interface Prices {
   monthly: { eth: number }
 }
 
-@modelOptions({
+setGlobalOptions({
   schemaOptions: { timestamps: true },
   options: { allowMixed: Severity.ALLOW },
 })
+
 export class Subscription {
   @prop({ required: true })
   userId: number

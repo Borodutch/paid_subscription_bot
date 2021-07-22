@@ -10,9 +10,7 @@ export class Chat {
 }
 
 // Get Chat model
-const ChatModel = getModelForClass(Chat, {
-  schemaOptions: { timestamps: true },
-})
+const ChatModel = getModelForClass(Chat)
 
 // Get or create chat
 export async function findChat(id: number) {
