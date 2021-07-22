@@ -4,7 +4,7 @@ import {
   Severity,
   setGlobalOptions,
 } from '@typegoose/typegoose'
-import Web3 from 'web3'
+import { web3 } from '@/helpers/web3'
 
 interface Adresses {
   eth: string
@@ -47,7 +47,6 @@ export async function getOrCreateSubscription(userId: number, chatId: number) {
     return subscription
   }
 
-  const web3 = new Web3(Web3.givenProvider || 'ws://localhost:8545')
   const ethAccount = web3.eth.accounts.create()
 
   subscription = await SubscriptionModel.create({
