@@ -16,6 +16,7 @@ And you should be good to go! Feel free to fork and submit pull requests. Thanks
 
 - `TOKEN` — Telegram bot token
 - `MONGO`— URL of the mongo database
+- `WEB3_PROVIDER` - Your local/remote Ethereum node
 
 Also, please, consider looking at `.env.sample`.
 
