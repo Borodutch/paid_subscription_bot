@@ -31,18 +31,16 @@ export class Subscription {
   addresses: Adresses
   @prop({ required: true, unique: true })
   privateKeys: PrivateKeys
-  @prop({ required: true })
+  @prop({})
   prices: Prices
 }
 
 export const SubscriptionModel = getModelForClass(Subscription)
 
 export async function getOrCreateSubscription(userId: number, chatId: number) {
-  const subscription = await SubscriptionModel.findOne({
-    chatId: chatId,
+  let subscription = await SubscriptionModel.findOne({
+    chatId,
   })
-
-  const price = 1
 
   if (subscription) {
     return subscription
@@ -51,7 +49,7 @@ export async function getOrCreateSubscription(userId: number, chatId: number) {
   const web3 = new Web3(Web3.givenProvider || 'ws://localhost:8545')
   const ethAccount = web3.eth.accounts.create()
 
-  const subscriptionCreated = await SubscriptionModel.create({
+  subscription = await SubscriptionModel.create({
     userId,
     chatId,
     addresses: {
@@ -60,7 +58,6 @@ export async function getOrCreateSubscription(userId: number, chatId: number) {
     privateKeys: {
       eth: ethAccount.privateKey,
     },
-    prices: { monthly: { eth: price } },
   })
 
   return subscription
