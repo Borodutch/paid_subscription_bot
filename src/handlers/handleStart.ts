@@ -28,7 +28,7 @@ export async function sendStart(ctx: Context) {
       )
       ctx.reply(
         ctx.i18n.t('subscription_message', {
-          subscriptionAddress: subscription.addresses.eth,
+          subscriptionAddress: subscription.accounts.eth.address,
         })
       )
     } else {
@@ -39,7 +39,7 @@ export async function sendStart(ctx: Context) {
   const subscription = await getOrCreateSubscription(ctx.from.id, ctx.chat.id)
   ctx.reply(
     ctx.i18n.t('subscription_message', {
-      subscriptionAddress: subscription.addresses.eth,
+      subscriptionAddress: subscription.accounts.eth.address,
     })
   )
 }

@@ -6,12 +6,11 @@ import {
 } from '@typegoose/typegoose'
 import { web3 } from '@/helpers/web3'
 
-interface Adresses {
-  eth: string
-}
-
-interface PrivateKeys {
-  eth: string
+interface Accounts {
+  eth: {
+    address: string
+    privateKey: string
+  }
 }
 
 interface Prices {
@@ -29,9 +28,7 @@ export class Subscription {
   @prop({ required: true })
   chatId: number
   @prop({ required: true, unique: true })
-  addresses: Adresses
-  @prop({ required: true, unique: true })
-  privateKeys: PrivateKeys
+  accounts: Accounts
   @prop()
   prices?: Prices
 }
@@ -52,12 +49,7 @@ export async function getOrCreateSubscription(userId: number, chatId: number) {
   subscription = await SubscriptionModel.create({
     userId,
     chatId,
-    addresses: {
-      eth: ethAccount.address,
-    },
-    privateKeys: {
-      eth: ethAccount.privateKey,
-    },
+    accounts: { eth: ethAccount },
   })
 
   return subscription
