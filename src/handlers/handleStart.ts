@@ -11,12 +11,7 @@ export async function sendStart(ctx: Context) {
 
   // if no language detected, ask for language first
   if (!ctx.dbchat.language) {
-    sendLanguage(MessageAfterLanguage.start, startPayload)(ctx)
-    const subscriptionInfo = await getOrCreateSubscription(
-      ctx.from.id,
-      ctx.chat.id
-    )
-    return ctx.reply(subscriptionInfo)
+    return sendLanguage(MessageAfterLanguage.start, startPayload)(ctx)
   }
 
   if (!!startPayload && startPayload.startsWith('admin')) {
@@ -27,19 +22,24 @@ export async function sendStart(ctx: Context) {
     const allowedStatuses = ['administrator', 'creator']
     if (allowedStatuses.includes(chatMemberInfo.status)) {
       ctx.reply(ctx.i18n.t('start_group_admin'))
-      const subscriptionInfo = await getOrCreateSubscription(
+      const subscription = await getOrCreateSubscription(
         ctx.from.id,
         ctx.chat.id
       )
-      return ctx.reply(subscriptionInfo)
+      ctx.reply(
+        ctx.i18n.t('subscription_message', {
+          subscriptionAddress: subscription.addresses.eth,
+        })
+      )
     } else {
       return ctx.reply(ctx.i18n.t('start_group_not_admin'))
     }
   }
 
-  const subscriptionInfo = await getOrCreateSubscription(
-    ctx.from.id,
-    ctx.chat.id
+  const subscription = await getOrCreateSubscription(ctx.from.id, ctx.chat.id)
+  ctx.reply(
+    ctx.i18n.t('subscription_message', {
+      subscriptionAddress: subscription.addresses.eth,
+    })
   )
-  return ctx.reply(subscriptionInfo)
 }
