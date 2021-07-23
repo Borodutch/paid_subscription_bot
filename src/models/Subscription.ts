@@ -32,8 +32,8 @@ export class Subscription {
   addresses: Adresses
   @prop({ required: true, unique: true })
   privateKeys: PrivateKeys
-  @prop({})
-  prices: Prices
+  @prop()
+  prices?: Prices
 }
 
 export const SubscriptionModel = getModelForClass(Subscription)
