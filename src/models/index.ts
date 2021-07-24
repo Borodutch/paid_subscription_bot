@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import { Severity, setGlobalOptions } from '@typegoose/typegoose'
 
 export function runMongo(mongoUrl = process.env.MONGO) {
   return mongoose.connect(mongoUrl, {
@@ -8,5 +9,10 @@ export function runMongo(mongoUrl = process.env.MONGO) {
     useFindAndModify: true,
   })
 }
+
+setGlobalOptions({
+  schemaOptions: { timestamps: true },
+  options: { allowMixed: Severity.ALLOW },
+})
 
 export * from './Chat'

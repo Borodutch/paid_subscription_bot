@@ -1,9 +1,4 @@
-import {
-  prop,
-  getModelForClass,
-  Severity,
-  setGlobalOptions,
-} from '@typegoose/typegoose'
+import { prop, getModelForClass } from '@typegoose/typegoose'
 import { web3 } from '@/helpers/web3'
 
 interface Accounts {
@@ -16,11 +11,6 @@ interface Accounts {
 interface Prices {
   monthly: { eth: number }
 }
-
-setGlobalOptions({
-  schemaOptions: { timestamps: true },
-  options: { allowMixed: Severity.ALLOW },
-})
 
 export class Subscription {
   @prop({ required: true })
