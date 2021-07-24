@@ -5,4 +5,4 @@ language: Please, select the language.
 language_selected: <b>Bot</b> now speaks English.
 notifications_on: Notifications enabled
 notifications_off: Notifications disabled
-subscription_message: In order to subscribe to this group, you need to transfer 1 ETH to ${subscriptionAddress}.
+subscription_message: In order to subscribe to this group, you need to transfer ${subscriptionPrice} ETH to ${subscriptionAddress}.
