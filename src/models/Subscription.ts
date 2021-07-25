@@ -18,7 +18,7 @@ export class Subscription {
   @prop({ required: true })
   userId: number
   @prop({ required: true })
-  chatId: number
+  chatId: number | string
   @prop({ required: true, unique: true })
   accounts: Accounts
   @prop()
@@ -27,7 +27,10 @@ export class Subscription {
 
 export const SubscriptionModel = getModelForClass(Subscription)
 
-export async function getOrCreateSubscription(userId: number, chatId: number) {
+export async function getOrCreateSubscription(
+  userId: number,
+  chatId: number | string
+) {
   let subscription = await SubscriptionModel.findOne({
     chatId,
   })

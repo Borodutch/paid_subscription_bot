@@ -18,17 +18,12 @@ export async function sendStart(ctx: Context) {
     const chatId = +startPayload.replace('admin', '')
     const userId = +ctx.from.id
     const chatMemberInfo = await ctx.telegram.getChatMember(chatId, userId)
-
     const allowedStatuses = ['administrator', 'creator']
     if (allowedStatuses.includes(chatMemberInfo.status)) {
-      ctx.reply(ctx.i18n.t('start_group_admin'))
-      const subscription = await getOrCreateSubscription(
-        ctx.from.id,
-        ctx.chat.id
-      )
-      ctx.reply(
-        ctx.i18n.t('subscription_message', {
-          subscriptionAddress: subscription.accounts.eth.address,
+      return ctx.replyWithHTML(
+        ctx.i18n.t('start_group_admin', {
+          chatId,
+          botName: ctx.botInfo.username,
         })
       )
     } else {
@@ -36,10 +31,11 @@ export async function sendStart(ctx: Context) {
     }
   }
 
-  const subscription = await getOrCreateSubscription(ctx.from.id, ctx.chat.id)
-  ctx.reply(
+  const subscription = await getOrCreateSubscription(ctx.from.id, startPayload)
+  return ctx.reply(
     ctx.i18n.t('subscription_message', {
       subscriptionAddress: subscription.accounts.eth.address,
+      subscriptionPrice: 1,
     })
   )
 }
