@@ -1,5 +1,6 @@
-import { prop, getModelForClass } from '@typegoose/typegoose'
+import { prop, getModelForClass, modelOptions } from '@typegoose/typegoose'
 import { web3 } from '@/helpers/web3'
+import { typegooseOptions } from '@/models/index'
 
 interface Accounts {
   eth: {
@@ -12,6 +13,7 @@ interface Prices {
   monthly: { eth: number }
 }
 
+@modelOptions(typegooseOptions)
 export class Subscription {
   @prop({ required: true })
   userId: number

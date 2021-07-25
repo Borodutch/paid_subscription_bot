@@ -1,5 +1,7 @@
-import { prop, getModelForClass } from '@typegoose/typegoose'
+import { prop, getModelForClass, modelOptions } from '@typegoose/typegoose'
+import { typegooseOptions } from '@/models/index'
 
+@modelOptions(typegooseOptions)
 export class Chat {
   @prop({ required: true, index: true, unique: true })
   id: number
