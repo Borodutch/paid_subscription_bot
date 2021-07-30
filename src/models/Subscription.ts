@@ -1,16 +1,13 @@
-import { prop, getModelForClass, modelOptions } from '@typegoose/typegoose'
+import { prop, getModelForClass, modelOptions, Ref } from '@typegoose/typegoose'
 import { web3 } from '@/helpers/web3'
 import { typegooseOptions } from '@/models/index'
+import { Chat, ChatModel } from '@/models/Chat'
 
 interface Accounts {
   eth: {
     address: string
     privateKey: string
   }
-}
-
-interface Prices {
-  monthly: { eth: number }
 }
 
 @modelOptions(typegooseOptions)
@@ -21,8 +18,8 @@ export class Subscription {
   chatId: number | string
   @prop({ required: true, unique: true })
   accounts: Accounts
-  @prop()
-  prices?: Prices
+  @prop({ ref: () => Chat })
+  chat: Ref<Chat>
 }
 
 export const SubscriptionModel = getModelForClass(Subscription)
@@ -32,19 +29,22 @@ export async function getOrCreateSubscription(
   chatId: number | string
 ) {
   let subscription = await SubscriptionModel.findOne({
+    userId,
     chatId,
-  })
+  }).populate('chat')
 
   if (subscription) {
     return subscription
   }
 
+  const chat = await ChatModel.findOne({ id: chatId })
   const ethAccount = web3.eth.accounts.create()
 
   subscription = await SubscriptionModel.create({
     userId,
     chatId,
     accounts: { eth: ethAccount },
+    chat,
   })
 
   return subscription
