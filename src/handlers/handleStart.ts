@@ -14,6 +14,10 @@ export async function sendStart(ctx: Context) {
     return sendLanguage(MessageAfterLanguage.start, startPayload)(ctx)
   }
 
+  if (startPayload === '') {
+    return ctx.replyWithHTML(ctx.i18n.t('help'))
+  }
+
   if (!!startPayload && startPayload.startsWith('admin')) {
     const chatId = +startPayload.replace('admin', '')
     const userId = ctx.from.id
