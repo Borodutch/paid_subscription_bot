@@ -36,7 +36,10 @@ export async function sendStart(ctx: Context) {
     }
   }
 
-  const subscription = await getOrCreateSubscription(ctx.from.id, startPayload)
+  const subscription = await getOrCreateSubscription(
+    ctx.from.id,
+    Number(startPayload)
+  )
   return ctx.reply(
     ctx.i18n.t('subscription_message', {
       subscriptionAddress: subscription.accounts.eth.address,

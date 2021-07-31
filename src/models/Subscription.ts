@@ -15,7 +15,7 @@ export class Subscription {
   @prop({ required: true })
   userId: number
   @prop({ required: true })
-  chatId: number | string
+  chatId: number
   @prop({ required: true, unique: true })
   accounts: Accounts
   @prop({ ref: () => Chat })
@@ -24,10 +24,7 @@ export class Subscription {
 
 export const SubscriptionModel = getModelForClass(Subscription)
 
-export async function getOrCreateSubscription(
-  userId: number,
-  chatId: number | string
-) {
+export async function getOrCreateSubscription(userId: number, chatId: number) {
   let subscription = await SubscriptionModel.findOne({
     userId,
     chatId,
