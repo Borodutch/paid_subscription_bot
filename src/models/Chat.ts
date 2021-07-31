@@ -1,5 +1,5 @@
 import { prop, getModelForClass, modelOptions } from '@typegoose/typegoose'
-import { typegooseOptions } from '@/models/index'
+import { typegooseOptions } from '@/helpers/typegoose'
 
 interface Price {
   monthly: { eth: number }
