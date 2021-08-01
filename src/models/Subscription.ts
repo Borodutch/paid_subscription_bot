@@ -1,7 +1,7 @@
 import { prop, getModelForClass, modelOptions, Ref } from '@typegoose/typegoose'
 import { web3 } from '@/helpers/web3'
 import { typegooseOptions } from '@/helpers/typegoose'
-import { Chat, ChatModel } from '@/models/Chat'
+import { Chat, ChatModel, findChat } from '@/models/Chat'
 
 interface Accounts {
   eth: {
@@ -34,7 +34,7 @@ export async function getOrCreateSubscription(userId: number, chatId: number) {
     return subscription
   }
 
-  const chat = await ChatModel.findOne({ id: chatId })
+  const chat = await findChat(chatId)
   const ethAccount = web3.eth.accounts.create()
 
   subscription = await SubscriptionModel.create({
