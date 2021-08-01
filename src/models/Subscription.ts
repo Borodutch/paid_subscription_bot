@@ -12,13 +12,13 @@ interface Accounts {
 
 @modelOptions(typegooseOptions)
 export class Subscription {
-  @prop({ required: true })
+  @prop({ required: true, index: true })
   userId: number
-  @prop({ required: true })
+  @prop({ required: true, index: true })
   chatId: number
   @prop({ required: true, unique: true })
   accounts: Accounts
-  @prop({ ref: () => Chat })
+  @prop({ ref: () => Chat, index: true })
   chat: Ref<Chat>
 }
 
