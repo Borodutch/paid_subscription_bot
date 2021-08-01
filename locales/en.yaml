@@ -7,3 +7,4 @@ notifications_on: Notifications enabled
 notifications_off: Notifications disabled
 subscription_message: In order to subscribe to this group, you need to transfer ${subscriptionPrice} ETH to ${subscriptionAddress}.
 start_group_admin: The group administrator has been verified! Give potential group members <a href="https://t.me/${botName}?start=${chatId}">this link</a> so they can subscribe.
+subscription_message_no_price: The admin hasn't set a subscription price yet. Follow the link later.
