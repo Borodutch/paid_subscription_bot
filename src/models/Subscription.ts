@@ -1,7 +1,7 @@
 import { prop, getModelForClass, modelOptions, Ref } from '@typegoose/typegoose'
 import { web3 } from '@/helpers/web3'
-import { typegooseOptions } from '@/helpers/typegoose'
-import { Chat, ChatModel, findChat } from '@/models/Chat'
+import { typegooseOptions } from '@/helpers/typegooseOptions'
+import { Chat, findChat } from '@/models/Chat'
 
 interface Accounts {
   eth: {

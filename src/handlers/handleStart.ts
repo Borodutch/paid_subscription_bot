@@ -14,11 +14,11 @@ export async function sendStart(ctx: Context) {
     return sendLanguage(MessageAfterLanguage.start, startPayload)(ctx)
   }
 
-  if (startPayload === '') {
+  if (!startPayload) {
     return ctx.replyWithHTML(ctx.i18n.t('help'))
   }
 
-  if (!!startPayload && startPayload.startsWith('admin')) {
+  if (startPayload.startsWith('admin')) {
     const chatId = +startPayload.replace('admin', '')
     const userId = ctx.from.id
     const chatMemberInfo = await ctx.telegram.getChatMember(chatId, userId)
@@ -36,19 +36,22 @@ export async function sendStart(ctx: Context) {
     }
   }
 
-  const subscription = await getOrCreateSubscription(
-    ctx.from.id,
-    Number(startPayload)
-  )
-
-  if (subscription.chat.price) {
-    return ctx.reply(
-      ctx.i18n.t('subscription_message', {
-        subscriptionAddress: subscription.accounts.eth.address,
-        subscriptionPrice: subscription.chat.price.monthly.eth,
-      })
+  if (startPayload.match(/^-?\d+$/)) {
+    const subscription = await getOrCreateSubscription(
+      ctx.from.id,
+      +startPayload
     )
-  }
 
-  return ctx.reply(ctx.i18n.t('subscription_message_no_price'))
+    if (subscription.chat.price) {
+      return ctx.reply(
+        ctx.i18n.t('subscription_message', {
+          subscriptionAddress: subscription.accounts.eth.address,
+          subscriptionPrice: subscription.chat.price.monthly.eth,
+        })
+      )
+    }
+
+    return ctx.reply(ctx.i18n.t('subscription_message_no_price'))
+  }
+  return ctx.replyWithHTML(ctx.i18n.t('help'))
 }
