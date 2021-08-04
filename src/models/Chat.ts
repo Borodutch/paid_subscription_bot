@@ -1,5 +1,11 @@
-import { prop, getModelForClass } from '@typegoose/typegoose'
+import { prop, getModelForClass, modelOptions } from '@typegoose/typegoose'
+import { typegooseOptions } from '@/helpers/typegooseOptions'
 
+interface Price {
+  monthly: { eth: number }
+}
+
+@modelOptions(typegooseOptions)
 export class Chat {
   @prop({ required: true, index: true, unique: true })
   id: number
@@ -7,12 +13,12 @@ export class Chat {
   language?: string
   @prop()
   notificationsOn: boolean
+  @prop()
+  price?: Price
 }
 
 // Get Chat model
-const ChatModel = getModelForClass(Chat, {
-  schemaOptions: { timestamps: true },
-})
+export const ChatModel = getModelForClass(Chat)
 
 // Get or create chat
 export async function findChat(id: number) {
