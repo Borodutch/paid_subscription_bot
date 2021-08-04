@@ -36,22 +36,16 @@ export async function sendStart(ctx: Context) {
     }
   }
 
-  if (startPayload.match(/^-?\d+$/)) {
-    const subscription = await getOrCreateSubscription(
-      ctx.from.id,
-      +startPayload
-    )
+  const subscription = await getOrCreateSubscription(ctx.from.id, +startPayload)
 
-    if (subscription.chat.price) {
-      return ctx.reply(
-        ctx.i18n.t('subscription_message', {
-          subscriptionAddress: subscription.accounts.eth.address,
-          subscriptionPrice: subscription.chat.price.monthly.eth,
-        })
-      )
-    }
-
+  if (!subscription.chat.price) {
     return ctx.reply(ctx.i18n.t('subscription_message_no_price'))
   }
-  return ctx.replyWithHTML(ctx.i18n.t('help'))
+
+  return ctx.reply(
+    ctx.i18n.t('subscription_message', {
+      subscriptionAddress: subscription.accounts.eth.address,
+      subscriptionPrice: subscription.chat.price.monthly.eth,
+    })
+  )
 }
