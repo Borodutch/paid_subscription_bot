@@ -46,19 +46,18 @@ configure_subscriptions: |
 configure_single_subscription: |
   Вы конфигурируете подписку на канал: ${chatId}
   Ethereum кошелек: ${ethWallet}
-  Сумма оплаты: $${payment}
+  Сумма оплаты: ${payment} ETH
 configure_wallet_undefined: Не установлен
 configure_wallet_button: Кошелек
-configure_pay_button: Оплата (USD)
+configure_pay_button: Оплата (ETH)
 configure_wallet: |
   Ответьте на это сообщение адресом вашего Ethereum-кошелька.
 configure_wallet_success: Кошелек успешно установлен!
 configure_pay: |
-  Введите новую стоимость подписки в долларах США (USD) в ответ на это сообщение.
+  Введите новую стоимость подписки в ETH в ответ на это сообщение.
 configure_pay_success: Платеж успешно установлен!
 configure_no_subscriptions: |
   У вас нет чатов, которые вы могли бы настроить.
-start_group_admin: Администратор группы подтвержден!
 start_group_not_admin: Простите, эта ссылка существует только для администраторов сообществ.
 notifications_on: Уведомления включены
 notifications_off: Уведомления отключены

@@ -1,6 +1,5 @@
 import { Context, Markup as m } from 'telegraf'
 import { ChatModel } from '@/models/Chat'
-import { CommonMessageBundle } from 'telegraf/typings/core/types/typegram'
 import { DocumentType } from '@typegoose/typegoose'
 import { Chat } from '@/models'
 
@@ -29,7 +28,7 @@ export const sendConfigureSingleSubscription = async (
   ctx: Context,
   chat: DocumentType<Chat>
 ) => {
-  // make a keyboard
+  // make a keyboard for wallet & price
   const keyboard = m.inlineKeyboard([
     m.button.callback(
       ctx.i18n.t('configure_wallet_button'),
@@ -41,8 +40,9 @@ export const sendConfigureSingleSubscription = async (
   return ctx.reply(
     ctx.i18n.t('configure_single_subscription', {
       chatId: chat.id,
-      ethWallet: chat.ethWallet || ctx.i18n.t('configure_wallet_undefined'),
-      payment: chat.payment || '0.00',
+      ethWallet:
+        chat.accounts?.eth.address || ctx.i18n.t('configure_wallet_undefined'),
+      payment: chat.price?.monthly?.eth || '0.00',
     }),
     keyboard
   )
@@ -87,7 +87,11 @@ export const handleConfigureMessage = async (ctx: Context) => {
     })
     if (!configuredChannel) return
 
-    configuredChannel.ethWallet = message.text
+    // todo: extract private key
+    configuredChannel.accounts = configuredChannel.accounts || {}
+    configuredChannel.accounts.eth = {
+      address: message.text,
+    }
     await configuredChannel.save()
 
     return ctx.reply(ctx.i18n.t('configure_wallet_success'))
@@ -103,7 +107,9 @@ export const handleConfigureMessage = async (ctx: Context) => {
     const amount = Math.floor(+message.text * 100) / 100
     if (isNaN(amount)) return
 
-    configuredChannel.payment = amount
+    configuredChannel.price = {
+      monthly: { eth: amount },
+    }
     await configuredChannel.save()
 
     return ctx.reply(ctx.i18n.t('configure_pay_success'))
