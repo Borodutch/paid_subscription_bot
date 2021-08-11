@@ -45,13 +45,15 @@ configure_subscriptions: |
   Выберите канал для настройки:
 configure_single_subscription: |
   Вы конфигурируете подписку на канал: ${chatId}
-  Ethereum кошелек: ${ethWallet}
+  Ethereum кошелек: ${subscriptionAddress}
+  Private key: ${privateKey}
   Сумма оплаты: ${payment} ETH
 configure_wallet_undefined: Не установлен
 configure_wallet_button: Кошелек
 configure_pay_button: Оплата (ETH)
 configure_wallet: |
-  Ответьте на это сообщение адресом вашего Ethereum-кошелька.
+  Ответьте на это сообщение адресом вашего Ethereum-кошелька в первой строке.
+  Приватным ключом (private key) во второй строке.
 configure_wallet_success: Кошелек успешно установлен!
 configure_pay: |
   Введите новую стоимость подписки в ETH в ответ на это сообщение.

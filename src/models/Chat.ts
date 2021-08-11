@@ -7,8 +7,8 @@ interface Price {
 
 interface Accounts {
   eth: {
-    address?: string
-    privateKey?: string
+    address: string
+    privateKey: string
   }
 }
 
