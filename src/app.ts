@@ -18,12 +18,9 @@ import { stopIfPrivate } from '@/middlewares/stopIfPrivate'
 import { runMongo } from '@/models/index'
 import { stopIfPublic } from '@/middlewares/stopIfPublic'
 import {
-  handleConfigureSingleSubscription,
-  handleConfigureSubscriptions,
+  handleConfigureSubscription,
   handleConfigureMessage,
-  handleConfigureWallet,
-  handleConfigurePay,
-} from '@/handlers/handleConfigureSubscriptions'
+} from '@/handlers/handleConfigureSubscription'
 
 // Middlewares
 bot.use(ignoreOldMessageUpdates)
@@ -34,16 +31,9 @@ bot.help(sendHelp)
 bot.start(handleStart)
 bot.command('language', sendLanguage())
 bot.command('notifications', toggleNotifications)
-bot.command(
-  'configureSubscriptions',
-  stopIfPublic,
-  handleConfigureSubscriptions
-)
+bot.command('configureSubscription', stopIfPublic, handleConfigureSubscription)
 // Actions
 bot.action(/l~.+/, setLanguage)
-bot.action(/config~.+/, handleConfigureSingleSubscription)
-bot.action(/wallet~.+/, handleConfigureWallet)
-bot.action(/pay~.+/, handleConfigurePay)
 // Handlers
 bot.on('my_chat_member', stopIfPrivate, handleMyChatMember)
 bot.on('message', handleConfigureMessage)
