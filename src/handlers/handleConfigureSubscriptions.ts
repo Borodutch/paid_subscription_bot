@@ -40,11 +40,7 @@ export const sendConfigureSingleSubscription = async (
   return ctx.reply(
     ctx.i18n.t('configure_single_subscription', {
       chatId: chat.id,
-      subscriptionAddress:
-        chat.accounts?.eth.address || ctx.i18n.t('configure_wallet_undefined'),
-      privateKey:
-        chat.accounts?.eth.privateKey ||
-        ctx.i18n.t('configure_wallet_undefined'),
+      ethAddress: chat.ethAddress || ctx.i18n.t('configure_wallet_undefined'),
       payment: chat.price?.monthly?.eth || '0.00',
     }),
     keyboard
@@ -90,16 +86,8 @@ export const handleConfigureMessage = async (ctx: Context) => {
     })
     if (!configuredChannel) return
 
-    // extract parts of ETH info
-    const [address, privateKey] = message.text
-      .split('\n')
-      .map((part) => part.trim())
-
     configuredChannel.accounts = configuredChannel.accounts || {}
-    configuredChannel.accounts.eth = {
-      address,
-      privateKey,
-    }
+    configuredChannel.ethAddress = message.text
     console.log(configuredChannel)
 
     await configuredChannel.save()
