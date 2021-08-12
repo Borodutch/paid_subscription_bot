@@ -5,6 +5,13 @@ interface Price {
   monthly: { eth: number }
 }
 
+// state of private chat for configuration of public paid chats
+export enum configurationState {
+  none = 'none',
+  awaitingEthAddress = 'awaitingEthAddress',
+  awaitingEthPrice = 'awaitingEthPrice',
+}
+
 @modelOptions(typegooseOptions)
 export class Chat {
   @prop({ required: true, index: true, unique: true })

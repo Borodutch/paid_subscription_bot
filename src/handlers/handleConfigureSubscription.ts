@@ -64,9 +64,13 @@ export const sendConfigureSingleSubscription = async (
   ctx: Context,
   configuredChat: DocumentType<Chat>
 ) => {
+  // fetch chat name
+  const configuredTelegramChat = await ctx.telegram.getChat(configuredChat.id)
+  if (!('title' in configuredTelegramChat)) return
+
   return ctx.reply(
     ctx.i18n.t('configure_single_subscription', {
-      chatId: configuredChat.id,
+      chatTitle: configuredTelegramChat.title,
       ethAddress: configuredChat.ethAddress,
       payment: configuredChat.price.monthly.eth,
     })

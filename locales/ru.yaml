@@ -44,9 +44,9 @@ start_group_admin: Администратор группы подтвержде�
 configure_subscriptions: |
   Выберите канал для настройки:
 configure_single_subscription: |
-  Вы конфигурируете подписку на канал: ${chatId}
-  Ethereum кошелек: ${ethAddress}
-  Сумма оплаты: ${payment} ETH
+  Вы конфигурируете подписку на канал: ${chatTitle}
+  Текущий Ethereum кошелек: ${ethAddress}
+  Текущая сумма оплаты: ${payment} ETH
 configure_wallet_undefined: Не установлен
 configure_wallet_button: Кошелек
 configure_pay_button: Оплата (ETH)
