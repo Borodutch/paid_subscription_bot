@@ -51,6 +51,7 @@ configure_single_subscription: |
   Введите новый адрес ETH-кошелька для приёма оплаты в следующем сообщении.
 configure_address_undefined: Не установлен
 configure_price_undefined: Не установлена
+configure_subscription_address_incorrect: Некорректный адрес. Убедитесь, что вводимое вами значение соответствует формату адреса ETH-счета.
 configure_subscription_price: Введите стоимость месячной подписки.
 configure_subscription_price_incorrect: Некорректный ввод. Пожалуйста, введите число. Дробная часть отделяется точкой.
 configure_success: |

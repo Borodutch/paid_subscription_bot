@@ -2,6 +2,7 @@ import { Context, Markup as m } from 'telegraf'
 import { ChatModel, ConfigurationState } from '@/models/Chat'
 import { DocumentType } from '@typegoose/typegoose'
 import { Chat } from '@/models'
+import { web3 } from '../helpers/web3'
 
 export const handleConfigureSubscription = async (ctx: Context) => {
   // detect, how many chats this user manages
@@ -35,7 +36,11 @@ export const handleConfigureMessage = async (ctx: Context) => {
     configuredChannel.configurationState ===
     ConfigurationState.awaitingEthAddress
   ) {
-    // todo: add eth address validation
+    const ethAddress = message.text
+    if (!web3.utils.isAddress(ethAddress)) {
+      return ctx.reply(ctx.i18n.t('configure_subscription_address_incorrect'))
+    }
+
     configuredChannel.ethAddress = message.text
     configuredChannel.configurationState = ConfigurationState.awaitingEthPrice
 
