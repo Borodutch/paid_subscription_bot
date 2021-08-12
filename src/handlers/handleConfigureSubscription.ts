@@ -54,7 +54,7 @@ export const handleConfigureMessage = async (ctx: Context) => {
     configuredChannel.configurationState === ConfigurationState.awaitingEthPrice
   ) {
     const amount = parseFloat(message.text)
-    if (isNaN(amount)) {
+    if (isNaN(amount) || amount < 0) {
       return ctx.reply(ctx.i18n.t('configure_subscription_price_incorrect'))
     }
 
