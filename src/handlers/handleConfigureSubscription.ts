@@ -1,7 +1,7 @@
 import { Context, Markup as m } from 'telegraf'
 import { ChatModel, ConfigurationState } from '@/models/Chat'
 import { DocumentType } from '@typegoose/typegoose'
-import { Chat } from '@/models'
+import { Chat, findChat } from '@/models'
 import { web3 } from '../helpers/web3'
 
 export const handleConfigureSubscription = async (ctx: Context) => {
@@ -74,6 +74,16 @@ export const handleConfigureMessage = async (ctx: Context) => {
       })
     )
   }
+}
+
+export const handleConfigureCancel = async (ctx: Context) => {
+  const configuredChat = await findChat(ctx.dbchat.configuredChat)
+  if (!configuredChat) return
+
+  configuredChat.configurationState = ConfigurationState.none
+  await configuredChat.save()
+
+  ctx.reply(ctx.i18n.t('configure_cancel'))
 }
 
 export const sendConfigureSingleSubscription = async (

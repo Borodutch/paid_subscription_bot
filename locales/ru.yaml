@@ -60,6 +60,7 @@ configure_success: |
   Новая сумма оплаты: ${price}
 
   Дайте потенциальным участникам группы <a href="https://t.me/${botName}?start=${chatId}">эту ссылку</a>, чтобы они могли подписаться.
+configure_cancel: Настройка подписки отменена.
 configure_no_subscriptions: У вас нет чатов, которые вы могли бы настроить.
 start_group_not_admin: Простите, эта ссылка существует только для администраторов сообществ.
 notifications_on: Уведомления включены

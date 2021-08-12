@@ -20,6 +20,7 @@ import { stopIfPublic } from '@/middlewares/stopIfPublic'
 import {
   handleConfigureSubscription,
   handleConfigureMessage,
+  handleConfigureCancel,
 } from '@/handlers/handleConfigureSubscription'
 
 // Middlewares
@@ -32,6 +33,7 @@ bot.start(handleStart)
 bot.command('language', sendLanguage())
 bot.command('notifications', toggleNotifications)
 bot.command('configureSubscription', stopIfPublic, handleConfigureSubscription)
+bot.command('cancel', handleConfigureCancel)
 // Actions
 bot.action(/l~.+/, setLanguage)
 // Handlers
