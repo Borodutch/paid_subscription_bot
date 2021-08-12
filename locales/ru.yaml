@@ -41,23 +41,21 @@ language_selected: <b>PSB</b> теперь говорит по-русски.
 not_admin: Пожалуйста, сделайте @${botName} админом, иначе он не сможет работать.
 start_group: Подтвердите владение этим сообществом, перейдя <a href="https://t.me/${botName}?start=admin${chatId}">по этой ссылке</a> и нажав "Start".
 start_group_admin: Администратор группы подтвержден!
-configure_subscriptions: |
-  Выберите канал для настройки:
 configure_single_subscription: |
   Вы конфигурируете подписку на канал: ${chatTitle}
   Текущий Ethereum кошелек: ${ethAddress}
-  Текущая сумма оплаты: ${price}
+  Текущая месячная сумма оплаты: ${price}
 
   Введите новый адрес ETH-кошелька для приёма оплаты в следующем сообщении.
 configure_address_undefined: Не установлен
 configure_price_undefined: Не установлена
 configure_subscription_address_incorrect: Некорректный адрес. Убедитесь, что вводимое вами значение соответствует формату адреса ETH-счета.
-configure_subscription_price: Введите стоимость месячной подписки.
-configure_subscription_price_incorrect: Некорректный ввод. Пожалуйста, введите число. Дробная часть отделяется точкой.
+configure_subscription_price: Введите стоимость месячной подписки в ETH.
+configure_subscription_price_incorrect: Некорректная сумма. Пожалуйста, введите число больше 0. Дробная часть отделяется точкой.
 configure_success: |
-  Канал успешно настроен!
+  Подписка успешно настроена!
   Новый адрес ETH кошелька: ${ethAddress}
-  Новая сумма оплаты: ${price}
+  Новая помесячная сумма оплаты: ${price}
 
   Дайте потенциальным участникам группы <a href="https://t.me/${botName}?start=${chatId}">эту ссылку</a>, чтобы они могли подписаться.
 configure_cancel: Настройка подписки отменена.
