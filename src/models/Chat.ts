@@ -5,13 +5,6 @@ interface Price {
   monthly: { eth: number }
 }
 
-interface Accounts {
-  eth: {
-    address: string
-    privateKey: string
-  }
-}
-
 @modelOptions(typegooseOptions)
 export class Chat {
   @prop({ required: true, index: true, unique: true })
@@ -24,8 +17,8 @@ export class Chat {
   administratorIds?: number[]
   @prop()
   price?: Price
-  @prop({ sparse: true })
-  accounts?: Accounts
+  @prop()
+  ethAddress?: string
   @prop()
   configuredChat?: number
   @prop()
