@@ -6,7 +6,7 @@ interface Price {
 }
 
 // state of private chat for configuration of public paid chats
-export enum configurationState {
+export enum ConfigurationState {
   none = 'none',
   awaitingEthAddress = 'awaitingEthAddress',
   awaitingEthPrice = 'awaitingEthPrice',
@@ -28,6 +28,8 @@ export class Chat {
   ethAddress?: string
   @prop()
   configuredChat?: number
+  @prop({ default: ConfigurationState.none })
+  configurationState?: ConfigurationState
   @prop()
   walletConfigureMessageId?: number
   @prop()

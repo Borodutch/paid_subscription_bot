@@ -1,5 +1,5 @@
 import { Context, Markup as m } from 'telegraf'
-import { ChatModel } from '@/models/Chat'
+import { ChatModel, ConfigurationState } from '@/models/Chat'
 import { DocumentType } from '@typegoose/typegoose'
 import { Chat } from '@/models'
 
@@ -18,45 +18,54 @@ export const handleConfigureSubscription = async (ctx: Context) => {
 }
 
 export const handleConfigureMessage = async (ctx: Context) => {
-  if (!('reply_to_message' in ctx.message) || !('text' in ctx.message)) {
-    return
-  }
+  if (!('text' in ctx.message)) return
+
   const message = ctx.message
-  const replyTo = message.reply_to_message
-  if (!replyTo) return
+
+  const configuredChannel = await ChatModel.findOne({
+    id: ctx.dbchat.configuredChat,
+  })
+  if (!configuredChannel) return
+
+  // if nothing to configure
+  if (configuredChannel.configurationState === ConfigurationState.none) return
 
   // configuring wallet
-  if (ctx.dbchat.walletConfigureMessageId === replyTo.message_id) {
-    const configuredChannel = await ChatModel.findOne({
-      id: ctx.dbchat.configuredChat,
-    })
-    if (!configuredChannel) return
-
-    configuredChannel.accounts = configuredChannel.accounts || {}
+  if (
+    configuredChannel.configurationState ===
+    ConfigurationState.awaitingEthAddress
+  ) {
+    // todo: add eth address validation
     configuredChannel.ethAddress = message.text
-    console.log(configuredChannel)
+    configuredChannel.configurationState = ConfigurationState.awaitingEthPrice
 
     await configuredChannel.save()
 
-    return ctx.reply(ctx.i18n.t('configure_wallet_success'))
+    return ctx.reply(ctx.i18n.t('configure_subscription_price'))
   }
 
-  // configuring payment
-  if (ctx.dbchat.paymentConfigureMessageId === replyTo.message_id) {
-    const configuredChannel = await ChatModel.findOne({
-      id: ctx.dbchat.configuredChat,
-    })
-    if (!configuredChannel) return
-
-    const amount = Math.floor(+message.text * 100) / 100
-    if (isNaN(amount)) return
-
-    configuredChannel.price = {
-      monthly: { eth: amount },
+  // configuring price
+  if (
+    configuredChannel.configurationState === ConfigurationState.awaitingEthPrice
+  ) {
+    const amount = parseFloat(message.text)
+    if (isNaN(amount)) {
+      return ctx.reply(ctx.i18n.t('configure_subscription_price_incorrect'))
     }
+
+    configuredChannel.price = configuredChannel.price || {}
+    configuredChannel.price.monthly = configuredChannel.price.monthly || {}
+    configuredChannel.price.monthly.eth = amount
+
+    configuredChannel.configurationState = ConfigurationState.none
     await configuredChannel.save()
 
-    return ctx.reply(ctx.i18n.t('configure_pay_success'))
+    return ctx.reply(
+      ctx.i18n.t('configure_success', {
+        ethAddress: configuredChannel.ethAddress,
+        price: configuredChannel.price.monthly.eth,
+      })
+    )
   }
 }
 
@@ -68,11 +77,18 @@ export const sendConfigureSingleSubscription = async (
   const configuredTelegramChat = await ctx.telegram.getChat(configuredChat.id)
   if (!('title' in configuredTelegramChat)) return
 
+  configuredChat.configurationState = ConfigurationState.awaitingEthAddress
+  ctx.dbchat.configuredChat = +configuredChat.id
+  await Promise.all([configuredChat.save(), ctx.dbchat.save()])
+
   return ctx.reply(
     ctx.i18n.t('configure_single_subscription', {
       chatTitle: configuredTelegramChat.title,
-      ethAddress: configuredChat.ethAddress,
-      payment: configuredChat.price.monthly.eth,
+      ethAddress:
+        configuredChat.ethAddress || ctx.i18n.t('configure_address_undefined'),
+      price: configuredChat.price?.monthly?.eth
+        ? `${configuredChat.price.monthly.eth} ETH`
+        : ctx.i18n.t('configure_price_undefined'),
     })
   )
 }
