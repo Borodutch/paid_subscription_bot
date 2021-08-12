@@ -60,10 +60,12 @@ export const handleConfigureMessage = async (ctx: Context) => {
     configuredChannel.configurationState = ConfigurationState.none
     await configuredChannel.save()
 
-    return ctx.reply(
+    return ctx.replyWithHTML(
       ctx.i18n.t('configure_success', {
         ethAddress: configuredChannel.ethAddress,
         price: configuredChannel.price.monthly.eth,
+        botName: ctx.botInfo.username,
+        chatId: configuredChannel.id,
       })
     )
   }

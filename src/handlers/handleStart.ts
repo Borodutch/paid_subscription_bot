@@ -2,6 +2,7 @@ import { Context } from 'telegraf'
 import { MessageAfterLanguage, sendLanguage } from '@/handlers/language'
 import { getOrCreateSubscription } from '@/models/Subscription'
 import { findChat } from '@/models'
+import { sendConfigureSingleSubscription } from './handleConfigureSubscription'
 
 export function handleStart(ctx: Context) {
   return sendStart(ctx)
@@ -33,20 +34,26 @@ export async function sendStart(ctx: Context) {
       if (!chat.administratorIds.includes(userId)) {
         chat.administratorIds.push(userId)
       }
-      await chat.save()
 
-      return ctx.replyWithHTML(
-        ctx.i18n.t('start_group_admin', {
-          chatId,
-          botName: ctx.botInfo.username,
-        })
-      )
+      await Promise.all([
+        chat.save(),
+        ctx.replyWithHTML(
+          ctx.i18n.t('start_group_admin', {
+            chatId,
+            botName: ctx.botInfo.username,
+          })
+        ),
+      ])
+
+      return sendConfigureSingleSubscription(ctx, chat)
     } else {
       return ctx.reply(ctx.i18n.t('start_group_not_admin'))
     }
   }
 
   const subscription = await getOrCreateSubscription(ctx.from.id, +startPayload)
+
+  console.log(subscription)
 
   if (!subscription.chat.price) {
     return ctx.reply(ctx.i18n.t('subscription_message_no_price'))
