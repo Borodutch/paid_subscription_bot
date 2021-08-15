@@ -1,8 +1,8 @@
 import { Context, Markup as m } from 'telegraf'
-import { ChatModel, ConfigurationState } from '@/models/Chat'
+import { ChatModel, State } from '@/models/Chat'
 import { DocumentType } from '@typegoose/typegoose'
 import { Chat, findChat } from '@/models'
-import { web3 } from '../helpers/web3'
+import { web3 } from '@/helpers/web3'
 
 export const handleConfigureSubscription = async (ctx: Context) => {
   // detect, how many chats this user manages
@@ -18,84 +18,103 @@ export const handleConfigureSubscription = async (ctx: Context) => {
   return sendConfigureSingleSubscription(ctx, userChats[0])
 }
 
-export const handleConfigureMessage = async (ctx: Context) => {
-  if (!('text' in ctx.message)) return
-
-  const message = ctx.message
-
-  const configuredChannel = await ChatModel.findOne({
-    id: ctx.dbchat.configuredChat,
-  })
-  if (!configuredChannel) return
-
-  // if nothing to configure
-  if (configuredChannel.configurationState === ConfigurationState.none) return
-
-  // configuring wallet
-  if (
-    configuredChannel.configurationState ===
-    ConfigurationState.awaitingEthAddress
-  ) {
-    const ethAddress = message.text
-    if (!web3.utils.isAddress(ethAddress)) {
-      return ctx.reply(ctx.i18n.t('configure_subscription_address_incorrect'))
-    }
-
-    configuredChannel.ethAddress = message.text
-    configuredChannel.configurationState = ConfigurationState.awaitingEthPrice
-
-    await configuredChannel.save()
-
-    return ctx.reply(ctx.i18n.t('configure_subscription_price'))
+const configureAddress = async (
+  ctx: Context,
+  configuredChannel: DocumentType<Chat>
+) => {
+  if (!('text' in ctx.message)) {
+    return
   }
 
-  // configuring price
-  if (
-    configuredChannel.configurationState === ConfigurationState.awaitingEthPrice
-  ) {
-    const amount = parseFloat(message.text)
-    if (isNaN(amount) || amount < 0) {
-      return ctx.reply(ctx.i18n.t('configure_subscription_price_incorrect'))
-    }
+  const ethAddress = ctx.message.text
+  if (!web3.utils.isAddress(ethAddress)) {
+    return ctx.reply(ctx.i18n.t('configure_subscription_address_incorrect'))
+  }
 
-    configuredChannel.price = configuredChannel.price || {}
-    configuredChannel.price.monthly = configuredChannel.price.monthly || {}
-    configuredChannel.price.monthly.eth = amount
+  configuredChannel.ethAddress = ctx.message.text
+  configuredChannel.state = State.awaitingEthPrice
 
-    configuredChannel.configurationState = ConfigurationState.none
-    await configuredChannel.save()
+  await configuredChannel.save()
 
-    return ctx.replyWithHTML(
-      ctx.i18n.t('configure_success', {
-        ethAddress: configuredChannel.ethAddress,
-        price: configuredChannel.price.monthly.eth,
-        botName: ctx.botInfo.username,
-        chatId: configuredChannel.id,
-      })
-    )
+  return ctx.reply(ctx.i18n.t('configure_subscription_price'))
+}
+
+const configurePrice = async (
+  ctx: Context,
+  configuredChannel: DocumentType<Chat>
+) => {
+  if (!('text' in ctx.message)) {
+    return
+  }
+
+  const amount = parseFloat(ctx.message.text)
+  if (isNaN(amount) || amount < 0) {
+    return ctx.reply(ctx.i18n.t('configure_subscription_price_incorrect'))
+  }
+
+  configuredChannel.price = configuredChannel.price || {}
+  configuredChannel.price.monthly = configuredChannel.price.monthly || {}
+  configuredChannel.price.monthly.eth = amount
+
+  configuredChannel.state = State.none
+  await configuredChannel.save()
+
+  return ctx.replyWithHTML(
+    ctx.i18n.t('configure_success', {
+      ethAddress: configuredChannel.ethAddress,
+      price: configuredChannel.price.monthly.eth,
+      botName: ctx.botInfo.username,
+      chatId: configuredChannel.id,
+    })
+  )
+}
+
+export const handleConfigureMessage = async (ctx: Context) => {
+  const configuredChannel = await ChatModel.findOne({
+    id: ctx.dbchat.configuredChatId,
+  })
+  console.log(configuredChannel)
+
+  if (!configuredChannel) {
+    return
+  }
+
+  switch (configuredChannel.state) {
+    case State.awaitingEthAddress:
+      console.log('address')
+      return configureAddress(ctx, configuredChannel)
+    case State.awaitingEthPrice:
+      console.log('price')
+      return configurePrice(ctx, configuredChannel)
+    case State.none:
+      console.log('none')
+      return
   }
 }
 
-export const handleConfigureCancel = async (ctx: Context) => {
-  const configuredChat = await findChat(ctx.dbchat.configuredChat)
-  if (!configuredChat) return
+export const handleCancel = async (ctx: Context) => {
+  const configuredChat = await findChat(ctx.dbchat.configuredChatId)
+  if (!configuredChat) {
+    return
+  }
 
-  configuredChat.configurationState = ConfigurationState.none
+  configuredChat.state = State.none
   await configuredChat.save()
 
-  ctx.reply(ctx.i18n.t('configure_cancel'))
+  ctx.reply(ctx.i18n.t('cancel'))
 }
 
 export const sendConfigureSingleSubscription = async (
   ctx: Context,
   configuredChat: DocumentType<Chat>
 ) => {
-  // fetch chat name
   const configuredTelegramChat = await ctx.telegram.getChat(configuredChat.id)
-  if (!('title' in configuredTelegramChat)) return
+  if (!('title' in configuredTelegramChat)) {
+    return
+  }
 
-  configuredChat.configurationState = ConfigurationState.awaitingEthAddress
-  ctx.dbchat.configuredChat = +configuredChat.id
+  configuredChat.state = State.awaitingEthAddress
+  ctx.dbchat.configuredChatId = +configuredChat.id
   await Promise.all([configuredChat.save(), ctx.dbchat.save()])
 
   return ctx.reply(

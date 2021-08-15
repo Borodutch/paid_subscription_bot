@@ -26,9 +26,7 @@ configure_success: |
   New monthly price: ${price}
 
   Give potential group members <a href="https://t.me/${botName}?start=${chatId}">this link</a> so they can subscribe.
-configure_cancel: Subscription configuration was canceled.
+cancel: Action canceled.
 configure_no_subscriptions: You do not have any chats to configure.
 start_group_not_admin: Sorry, this link is for administrators only.
-notifications_on: Notifications are now on
-notifications_off: Notifications are now off
 subscription_message_no_price: The admin hasn't set a subscription price yet. Follow the link later.

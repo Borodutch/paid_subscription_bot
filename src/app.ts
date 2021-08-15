@@ -1,4 +1,4 @@
-import { localeActions } from './handlers/language'
+import { localeActions } from '@/handlers/language'
 // Setup @/ aliases for modules
 import 'module-alias/register'
 // Config dotenv
@@ -20,7 +20,7 @@ import { stopIfPublic } from '@/middlewares/stopIfPublic'
 import {
   handleConfigureSubscription,
   handleConfigureMessage,
-  handleConfigureCancel,
+  handleCancel,
 } from '@/handlers/handleConfigureSubscription'
 
 // Middlewares
@@ -33,13 +33,13 @@ bot.start(handleStart)
 bot.command('language', sendLanguage())
 bot.command('notifications', toggleNotifications)
 bot.command('configureSubscription', stopIfPublic, handleConfigureSubscription)
-bot.command('cancel', handleConfigureCancel)
+bot.command('cancel', handleCancel)
 // Actions
 bot.action(/l~.+/, setLanguage)
 // Handlers
 bot.on('my_chat_member', stopIfPrivate, handleMyChatMember)
 bot.on('message', handleConfigureMessage)
-// Errors
+// Errorsprettierprettierprettier
 bot.catch(console.error)
 // Start bot
 runMongo().then(() => {

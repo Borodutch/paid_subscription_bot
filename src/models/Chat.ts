@@ -5,8 +5,7 @@ interface Price {
   monthly: { eth: number }
 }
 
-// state of private chat for configuration of public paid chats
-export enum ConfigurationState {
+export enum State {
   none = 'none',
   awaitingEthAddress = 'awaitingEthAddress',
   awaitingEthPrice = 'awaitingEthPrice',
@@ -20,16 +19,16 @@ export class Chat {
   language?: string
   @prop()
   notificationsOn: boolean
-  @prop()
+  @prop({ required: true, default: [] })
   administratorIds?: number[]
   @prop()
   price?: Price
   @prop()
   ethAddress?: string
   @prop()
-  configuredChat?: number
-  @prop({ default: ConfigurationState.none })
-  configurationState?: ConfigurationState
+  configuredChatId?: number
+  @prop({ enum: State })
+  state?: State
   @prop()
   walletConfigureMessageId?: number
   @prop()
@@ -47,10 +46,7 @@ export async function findChat(id: number) {
     // Try/catch is used to avoid race conditions
     try {
       chat = await new ChatModel({ id }).save()
-      console.log(chat)
     } catch (err) {
-      console.log(err)
-
       chat = await ChatModel.findOne({ id })
     }
   }
