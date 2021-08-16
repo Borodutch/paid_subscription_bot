@@ -31,7 +31,9 @@ const configureAddress = async (
     return ctx.reply(ctx.i18n.t('configure_subscription_address_incorrect'))
   }
 
-  configuredChannel.ethAddress = ctx.message.text
+  configuredChannel.accounts = configuredChannel.accounts || {}
+  configuredChannel.accounts.eth = configuredChannel.accounts.eth || {}
+  configuredChannel.accounts.eth.address = ctx.message.text
   configuredChannel.state = State.awaitingEthPrice
 
   await configuredChannel.save()
@@ -61,7 +63,7 @@ const configurePrice = async (
 
   return ctx.replyWithHTML(
     ctx.i18n.t('configure_success', {
-      ethAddress: configuredChannel.ethAddress,
+      ethAddress: configuredChannel.accounts.eth.address,
       price: configuredChannel.price.monthly.eth,
       botName: ctx.botInfo.username,
       chatId: configuredChannel.id,
@@ -73,7 +75,6 @@ export const handleConfigureMessage = async (ctx: Context) => {
   const configuredChannel = await ChatModel.findOne({
     id: ctx.dbchat.configuredChatId,
   })
-  console.log(configuredChannel)
 
   if (!configuredChannel) {
     return
@@ -81,13 +82,10 @@ export const handleConfigureMessage = async (ctx: Context) => {
 
   switch (configuredChannel.state) {
     case State.awaitingEthAddress:
-      console.log('address')
       return configureAddress(ctx, configuredChannel)
     case State.awaitingEthPrice:
-      console.log('price')
       return configurePrice(ctx, configuredChannel)
     case State.none:
-      console.log('none')
       return
   }
 }
@@ -121,7 +119,8 @@ export const sendConfigureSingleSubscription = async (
     ctx.i18n.t('configure_single_subscription', {
       chatTitle: configuredTelegramChat.title,
       ethAddress:
-        configuredChat.ethAddress || ctx.i18n.t('configure_address_undefined'),
+        configuredChat?.accounts?.eth?.address ||
+        ctx.i18n.t('configure_address_undefined'),
       price: configuredChat.price?.monthly?.eth
         ? `${configuredChat.price.monthly.eth} ETH`
         : ctx.i18n.t('configure_price_undefined'),

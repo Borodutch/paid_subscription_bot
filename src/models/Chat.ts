@@ -1,5 +1,6 @@
 import { prop, getModelForClass, modelOptions } from '@typegoose/typegoose'
 import { typegooseOptions } from '@/helpers/typegooseOptions'
+import { Accounts } from '@/models/Accounts'
 
 interface Price {
   monthly: { eth: number }
@@ -24,7 +25,7 @@ export class Chat {
   @prop()
   price?: Price
   @prop()
-  ethAddress?: string
+  accounts?: Accounts
   @prop()
   configuredChatId?: number
   @prop({ enum: State })
