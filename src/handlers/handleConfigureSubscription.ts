@@ -31,8 +31,6 @@ const configureAddress = async (
     return ctx.reply(ctx.i18n.t('configure_subscription_address_incorrect'))
   }
 
-  configuredChannel.accounts = configuredChannel.accounts || {}
-  configuredChannel.accounts.eth = configuredChannel.accounts.eth || {}
   configuredChannel.accounts.eth.address = ctx.message.text
   configuredChannel.state = State.awaitingEthPrice
 
@@ -54,8 +52,6 @@ const configurePrice = async (
     return ctx.reply(ctx.i18n.t('configure_subscription_price_incorrect'))
   }
 
-  configuredChannel.price = configuredChannel.price || {}
-  configuredChannel.price.monthly = configuredChannel.price.monthly || {}
   configuredChannel.price.monthly.eth = amount
 
   configuredChannel.state = State.none

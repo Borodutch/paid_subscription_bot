@@ -2,7 +2,8 @@ import { prop, getModelForClass, modelOptions } from '@typegoose/typegoose'
 import { typegooseOptions } from '@/helpers/typegooseOptions'
 import { Accounts } from '@/models/Accounts'
 
-interface Price {
+class Price {
+  @prop()
   monthly: { eth: number }
 }
 
@@ -21,11 +22,11 @@ export class Chat {
   @prop()
   notificationsOn: boolean
   @prop({ required: true, default: [] })
-  administratorIds?: number[]
-  @prop()
-  price?: Price
-  @prop()
-  accounts?: Accounts
+  administratorIds: number[]
+  @prop({ _id: false, default: { monthly: { eth: NaN } } })
+  price: Price
+  @prop({ _id: false, default: { eth: { address: '', privateKey: '' } } })
+  accounts: Accounts
   @prop()
   configuredChatId?: number
   @prop({ enum: State })

@@ -39,7 +39,7 @@ bot.action(/l~.+/, setLanguage)
 // Handlers
 bot.on('my_chat_member', stopIfPrivate, handleMyChatMember)
 bot.on('message', handleConfigureMessage)
-// Errorsprettierprettierprettier
+// Errors
 bot.catch(console.error)
 // Start bot
 runMongo().then(() => {
