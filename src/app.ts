@@ -17,11 +17,9 @@ import { toggleNotifications } from '@/handlers/toggleNotifications'
 import { stopIfPrivate } from '@/middlewares/stopIfPrivate'
 import { runMongo } from '@/models/index'
 import { stopIfPublic } from '@/middlewares/stopIfPublic'
-import {
-  handleConfigureSubscription,
-  handleConfigureMessage,
-  handleCancel,
-} from '@/handlers/handleConfigureSubscription'
+import { handleConfigureMessage } from '@/handlers/handleConfigureMessage'
+import { handleCancel } from '@/handlers/handleCancel'
+import { handleConfigureSubscription } from '@/handlers/handleConfigureSubscription'
 
 // Middlewares
 bot.use(ignoreOldMessageUpdates)
@@ -38,7 +36,7 @@ bot.command('cancel', handleCancel)
 bot.action(/l~.+/, setLanguage)
 // Handlers
 bot.on('my_chat_member', stopIfPrivate, handleMyChatMember)
-bot.on('message', handleConfigureMessage)
+bot.on('message', stopIfPublic, handleConfigureMessage)
 // Errors
 bot.catch(console.error)
 // Start bot

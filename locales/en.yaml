@@ -25,7 +25,9 @@ configure_success: |
   New ETH address: ${ethAddress}
   New monthly price: ${price}
 
-  Give potential group members <a href="https://t.me/${botName}?start=${chatId}">this link</a> so they can subscribe.
+  Give potential group members this link:
+  ```https://t.me/${botName}?start=${chatId}```
+  so they can subscribe.
 cancel: Action canceled.
 configure_no_subscriptions: You do not have any chats to configure.
 start_group_not_admin: Sorry, this link is for administrators only.

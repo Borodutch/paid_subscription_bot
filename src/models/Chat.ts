@@ -23,18 +23,14 @@ export class Chat {
   notificationsOn: boolean
   @prop({ required: true, default: [] })
   administratorIds: number[]
-  @prop({ _id: false, default: { monthly: { eth: NaN } } })
-  price: Price
-  @prop({ _id: false, default: { eth: { address: '', privateKey: '' } } })
-  accounts: Accounts
+  @prop({ _id: false })
+  price?: Price
+  @prop({ _id: false })
+  accounts?: Accounts
   @prop()
   configuredChatId?: number
   @prop({ enum: State })
   state?: State
-  @prop()
-  walletConfigureMessageId?: number
-  @prop()
-  paymentConfigureMessageId?: number
 }
 
 // Get Chat model
@@ -43,7 +39,6 @@ export const ChatModel = getModelForClass(Chat)
 // Get or create chat
 export async function findChat(id: number) {
   let chat = await ChatModel.findOne({ id })
-
   if (!chat) {
     // Try/catch is used to avoid race conditions
     try {
