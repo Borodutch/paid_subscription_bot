@@ -16,7 +16,7 @@ const configureAddress = async (
     return ctx.reply(ctx.i18n.t('configure_subscription_address_incorrect'))
   }
 
-  configuredChannel.accounts.eth.address = ctx.message.text
+  configuredChannel.accounts = { eth: { address: ctx.message.text } }
   configuredChannel.state = State.awaitingEthPrice
 
   await configuredChannel.save()
@@ -37,18 +37,19 @@ const configurePrice = async (
     return ctx.reply(ctx.i18n.t('configure_subscription_price_incorrect'))
   }
 
-  configuredChannel.price.monthly.eth = amount
+  configuredChannel.price = { monthly: { eth: amount } }
 
   configuredChannel.state = State.none
   await configuredChannel.save()
 
-  return ctx.replyWithHTML(
+  return ctx.reply(
     ctx.i18n.t('configure_success', {
       ethAddress: configuredChannel.accounts.eth.address,
       price: configuredChannel.price.monthly.eth,
       botName: ctx.botInfo.username,
       chatId: configuredChannel.id,
-    })
+    }),
+    { parse_mode: 'Markdown' }
   )
 }
 

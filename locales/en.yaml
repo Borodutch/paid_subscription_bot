@@ -26,7 +26,7 @@ configure_success: |
   New monthly price: ${price}
 
   Give potential group members this link:
-  ```https://t.me/${botName}?start=${chatId}```
+  `https://t.me/${botName}?start=${chatId}`
   so they can subscribe.
 cancel: Action canceled.
 configure_no_subscriptions: You do not have any chats to configure.

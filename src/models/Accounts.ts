@@ -8,6 +8,6 @@ class Eth {
 }
 
 export class Accounts {
-  @prop()
+  @prop({ _id: false })
   eth: Eth
 }
