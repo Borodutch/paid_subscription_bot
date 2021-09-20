@@ -1,6 +1,8 @@
 import { Context } from 'telegraf'
 import { MessageAfterLanguage, sendLanguage } from '@/handlers/language'
 import { getOrCreateSubscription } from '@/models/Subscription'
+import { findChat } from '@/models'
+import { sendConfigureSingleSubscription } from '@/handlers/handleConfigureSubscription'
 
 export function handleStart(ctx: Context) {
   return sendStart(ctx)
@@ -25,12 +27,21 @@ export async function sendStart(ctx: Context) {
 
     const allowedStatuses = ['administrator', 'creator']
     if (allowedStatuses.includes(chatMemberInfo.status)) {
-      return ctx.replyWithHTML(
+      // save user as chat admin in array
+      const publicChat = await findChat(chatId)
+      if (!publicChat.administratorIds.includes(userId)) {
+        publicChat.administratorIds.push(userId)
+      }
+
+      await publicChat.save()
+      await ctx.replyWithHTML(
         ctx.i18n.t('start_group_admin', {
           chatId,
           botName: ctx.botInfo.username,
         })
       )
+
+      return sendConfigureSingleSubscription(ctx, publicChat)
     } else {
       return ctx.reply(ctx.i18n.t('start_group_not_admin'))
     }

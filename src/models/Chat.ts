@@ -1,8 +1,16 @@
 import { prop, getModelForClass, modelOptions } from '@typegoose/typegoose'
 import { typegooseOptions } from '@/helpers/typegooseOptions'
+import { Accounts } from '@/models/Accounts'
 
-interface Price {
+class Price {
+  @prop()
   monthly: { eth: number }
+}
+
+export enum State {
+  none = 'none',
+  awaitingEthAddress = 'awaitingEthAddress',
+  awaitingEthPrice = 'awaitingEthPrice',
 }
 
 @modelOptions(typegooseOptions)
@@ -13,8 +21,16 @@ export class Chat {
   language?: string
   @prop()
   notificationsOn: boolean
-  @prop()
+  @prop({ required: true, default: [] })
+  administratorIds: number[]
+  @prop({ _id: false })
   price?: Price
+  @prop({ _id: false })
+  accounts?: Accounts
+  @prop()
+  configuredChatId?: number
+  @prop({ enum: State })
+  state?: State
 }
 
 // Get Chat model

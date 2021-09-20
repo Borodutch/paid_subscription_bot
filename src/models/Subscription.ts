@@ -2,13 +2,7 @@ import { prop, getModelForClass, modelOptions, Ref } from '@typegoose/typegoose'
 import { web3 } from '@/helpers/web3'
 import { typegooseOptions } from '@/helpers/typegooseOptions'
 import { Chat, findChat } from '@/models/Chat'
-
-interface Accounts {
-  eth: {
-    address: string
-    privateKey: string
-  }
-}
+import { Accounts } from '@/models/Accounts'
 
 @modelOptions(typegooseOptions)
 export class Subscription {
