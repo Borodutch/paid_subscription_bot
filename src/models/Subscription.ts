@@ -18,6 +18,10 @@ export class Subscription {
 
 export const SubscriptionModel = getModelForClass(Subscription)
 
+export function getUserSubscriptions(userId: number) {
+  return SubscriptionModel.find({ userId }).populate('chat')
+}
+
 export async function getOrCreateSubscription(userId: number, chatId: number) {
   let subscription = await SubscriptionModel.findOne({
     userId,

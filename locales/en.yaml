@@ -32,3 +32,10 @@ cancel: Action canceled.
 configure_no_subscriptions: You do not have any chats to configure.
 start_group_not_admin: Sorry, this link is for administrators only.
 subscription_message_no_price: The admin hasn't set a subscription price yet. Follow the link later.
+subscriptions_list: |
+  Your subscriptions.
+  ${subscriptionsString}
+subscriptions_list_item: |
+  Channel: ${channelName}
+  Address: ${ethAddress}
+  Price: ${price}

@@ -67,3 +67,10 @@ notifications_on: Уведомления включены
 notifications_off: Уведомления отключены
 subscription_message: Чтобы подписаться на эту группу, вам нужно перевести ${subscriptionPrice} ETH по адресу ${subscriptionAddress}.
 subscription_message_no_price: Администратор еще не установил цену подписки. Перейдите по ссылке позже.
+subscriptions_list: |
+  Ваши подписки.
+  ${subscriptionsString}
+subscriptions_list_item: |
+  Канал: ${channelName}
+  Адрес: `${ethAddress}`
+  Цена: ${price}
