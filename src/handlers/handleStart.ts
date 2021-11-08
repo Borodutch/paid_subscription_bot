@@ -37,8 +37,7 @@ export async function sendStart(ctx: Context) {
         publicChat.administratorIds.push(userId)
       }
 
-      await admin.save()
-      await publicChat.save()
+      Promise.all([await admin.save(), await publicChat.save()])
       await ctx.replyWithHTML(
         ctx.i18n.t('start_group_admin', {
           chatId,
