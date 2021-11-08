@@ -74,3 +74,4 @@ subscriptions_list_item: |
   Канал: ${channelName}
   Адрес: `${ethAddress}`
   Цена: ${price}
+check_admin_true: Подписку на какой чат вы хотите настроить?

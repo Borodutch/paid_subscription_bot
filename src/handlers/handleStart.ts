@@ -27,12 +27,17 @@ export async function sendStart(ctx: Context) {
 
     const allowedStatuses = ['administrator', 'creator']
     if (allowedStatuses.includes(chatMemberInfo.status)) {
+      const admin = await findChat(userId)
+      if (!admin.adminChats.includes(chatId)) {
+        admin.adminChats.push(chatId)
+      }
       // save user as chat admin in array
       const publicChat = await findChat(chatId)
       if (!publicChat.administratorIds.includes(userId)) {
         publicChat.administratorIds.push(userId)
       }
 
+      await admin.save()
       await publicChat.save()
       await ctx.replyWithHTML(
         ctx.i18n.t('start_group_admin', {

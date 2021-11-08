@@ -22,6 +22,7 @@ import { handleCancel } from '@/handlers/handleCancel'
 import { handleConfigureSubscription } from '@/handlers/handleConfigureSubscription'
 import { handleSubscriptions } from '@/handlers/handleSubscriptions'
 import { deleteDemotedAdmin } from '@/middlewares/deleteDemotedAdmin'
+import { checkAdmin } from '@/middlewares/checkAdmin'
 
 // Middlewares
 bot.use(ignoreOldMessageUpdates)
@@ -32,11 +33,12 @@ bot.help(sendHelp)
 bot.start(handleStart)
 bot.command('language', sendLanguage())
 bot.command('notifications', toggleNotifications)
-bot.command('configureSubscription', stopIfPublic, handleConfigureSubscription)
+bot.command('configureSubscription', stopIfPublic, checkAdmin)
 bot.command('cancel', handleCancel)
 bot.command('subscriptions', handleSubscriptions)
 // Actions
 bot.action(/l~.+/, setLanguage)
+bot.action(/^-\d+/, handleConfigureSubscription)
 // Handlers
 bot.on('my_chat_member', stopIfPrivate, handleMyChatMember)
 bot.on('message', stopIfPublic, handleConfigureMessage)
@@ -48,7 +50,14 @@ runMongo().then(() => {
   console.log('Mongo connected')
 })
 bot
-  .launch({ allowedUpdates: ['chat_member', 'my_chat_member', 'message'] })
+  .launch({
+    allowedUpdates: [
+      'chat_member',
+      'my_chat_member',
+      'message',
+      'callback_query',
+    ],
+  })
   .then(() => {
     console.info(`Bot ${bot.botInfo.username} is up and running`)
   })
