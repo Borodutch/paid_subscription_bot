@@ -5,9 +5,17 @@ import { Chat, findChat } from '@/models'
 import { web3 } from '@/helpers/web3'
 
 export const handleConfigureSubscription = async (ctx: Context) => {
-  const chat = await findChat(ctx.callbackQuery['data'])
+  // detect, how many chats this user manages
+  const userChats = await ChatModel.find({
+    administratorIds: ctx.chat.id,
+  })
 
-  return sendConfigureSingleSubscription(ctx, chat)
+  // assuming there are only 0 or 1 chat
+  if (userChats.length === 0) {
+    return ctx.reply(ctx.i18n.t('configure_no_subscriptions'))
+  }
+
+  return sendConfigureSingleSubscription(ctx, userChats[0])
 }
 
 export const sendConfigureSingleSubscription = async (
@@ -22,24 +30,6 @@ export const sendConfigureSingleSubscription = async (
   configuredChat.state = State.awaitingEthAddress
   ctx.dbchat.configuredChatId = +configuredChat.id
   await Promise.all([configuredChat.save(), ctx.dbchat.save()])
-
-  if (!!ctx.callbackQuery) {
-    const message = ctx.callbackQuery.message
-    return ctx.telegram.editMessageText(
-      message.chat.id,
-      message.message_id,
-      undefined,
-      ctx.i18n.t('configure_single_subscription', {
-        chatTitle: configuredTelegramChat.title,
-        ethAddress:
-          configuredChat?.accounts?.eth?.address ||
-          ctx.i18n.t('configure_address_undefined'),
-        price: configuredChat.price?.monthly?.eth
-          ? `${configuredChat.price.monthly.eth} ETH`
-          : ctx.i18n.t('configure_price_undefined'),
-      })
-    )
-  }
 
   return ctx.reply(
     ctx.i18n.t('configure_single_subscription', {

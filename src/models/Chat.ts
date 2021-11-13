@@ -31,8 +31,6 @@ export class Chat {
   configuredChatId?: number
   @prop({ enum: State })
   state?: State
-  @prop({ required: true, default: [] })
-  adminChats: number[]
 }
 
 // Get Chat model

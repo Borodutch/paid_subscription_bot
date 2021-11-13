@@ -39,4 +39,3 @@ subscriptions_list_item: |
   Channel: ${channelName}
   Address: ${ethAddress}
   Price: ${price}
-check_admin_true: Which chat subscription do you want to configure?

@@ -7,16 +7,15 @@ export async function deleteDemotedAdmin(ctx: Context, next: () => void) {
     ctx.chatMember.new_chat_member.status !== 'administrator'
   ) {
     const chat = await findChat(ctx.chat.id)
-    const user = await findChat(ctx.chatMember.new_chat_member.user.id)
 
-    const indexOfDemotedAdmin = chat.administratorIds.indexOf(user.id)
-    const indexOfChat = user.adminChats.indexOf(chat.id)
+    const indexOfDemotedAdmin = chat.administratorIds.indexOf(
+      ctx.chatMember.new_chat_member.user.id
+    )
 
-    if (indexOfDemotedAdmin !== -1 && indexOfChat !== -1) {
+    if (indexOfDemotedAdmin !== -1) {
       chat.administratorIds.splice(indexOfDemotedAdmin, 1)
-      user.adminChats.splice(indexOfChat, 1)
 
-      Promise.all([await chat.save(), await user.save()])
+      await chat.save()
       return next()
     }
   }
