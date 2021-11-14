@@ -21,6 +21,7 @@ import { handleConfigureMessage } from '@/handlers/handleConfigureMessage'
 import { handleCancel } from '@/handlers/handleCancel'
 import { handleConfigureSubscription } from '@/handlers/handleConfigureSubscription'
 import { handleSubscriptions } from '@/handlers/handleSubscriptions'
+import { deleteDemotedAdmin } from '@/middlewares/deleteDemotedAdmin'
 
 // Middlewares
 bot.use(ignoreOldMessageUpdates)
@@ -39,12 +40,17 @@ bot.action(/l~.+/, setLanguage)
 // Handlers
 bot.on('my_chat_member', stopIfPrivate, handleMyChatMember)
 bot.on('message', stopIfPublic, handleConfigureMessage)
+bot.on('chat_member', deleteDemotedAdmin)
 // Errors
 bot.catch(console.error)
 // Start bot
 runMongo().then(() => {
   console.log('Mongo connected')
 })
-bot.launch().then(() => {
-  console.info(`Bot ${bot.botInfo.username} is up and running`)
-})
+bot
+  .launch({
+    allowedUpdates: ['chat_member', 'my_chat_member', 'message'],
+  })
+  .then(() => {
+    console.info(`Bot ${bot.botInfo.username} is up and running`)
+  })
