@@ -14,6 +14,8 @@ export class Subscription {
   accounts: Accounts
   @prop({ ref: () => Chat, index: true })
   chat: Ref<Chat>
+  @prop({ required: true, default: false })
+  isPaid: boolean
 }
 
 export const SubscriptionModel = getModelForClass(Subscription)
