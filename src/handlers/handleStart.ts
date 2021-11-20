@@ -53,10 +53,23 @@ export async function sendStart(ctx: Context) {
     return ctx.reply(ctx.i18n.t('subscription_message_no_price'))
   }
 
-  return ctx.reply(
-    ctx.i18n.t('subscription_message', {
-      subscriptionAddress: subscription.accounts.eth.address,
-      subscriptionPrice: subscription.chat.price.monthly.eth,
-    })
+  const { invite_link: inviteLink } = await ctx.telegram.createChatInviteLink(
+    +startPayload,
+    {
+      member_limit: 1,
+    }
   )
+
+  return subscription.isPaid
+    ? ctx.replyWithHTML(
+        ctx.i18n.t('subscription_message_paid_true', {
+          inviteLink,
+        })
+      )
+    : ctx.reply(
+        ctx.i18n.t('subscription_message_paid_false', {
+          subscriptionAddress: subscription.accounts.eth.address,
+          subscriptionPrice: subscription.chat.price.monthly.eth,
+        })
+      )
 }
